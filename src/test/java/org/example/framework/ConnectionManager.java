@@ -1,4 +1,6 @@
-package org.example.framework.connection;
+package org.example.framework;
+
+import org.example.config.Config;
 
 import java.io.IOException;
 import java.net.URI;
@@ -19,6 +21,14 @@ public class ConnectionManager {
     public static String getConnection() {
         getResponse();
         return getURL();
+    }
+
+    public static String getConnectionAndAPIKey() {
+        return getURL() + Config.getApiKey();
+    }
+
+    public static int getStatusCode() {
+        return getResponse().statusCode();
     }
 
     private static HttpResponse<String> getResponse() {
