@@ -7,6 +7,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.logging.Logger;
 
 public class ConnectionManager {
 
@@ -39,7 +40,6 @@ public class ConnectionManager {
             httpResponse = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
         } catch (IOException | InterruptedException e) {
             //e.printStackTrace();
-            System.err.println("There was an error communicating with the API.");
         }
         return httpResponse;
     }
