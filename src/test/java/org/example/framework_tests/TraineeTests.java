@@ -1,6 +1,7 @@
 package org.example.framework_tests;
 
 import org.example.DTOs.TraineeDTO;
+import org.example.POJOs.Id;
 import org.junit.jupiter.api.*;
 
 import java.time.LocalDate;
@@ -13,7 +14,7 @@ public class TraineeTests {
 
     @BeforeEach
     void init() {
-        traineeDTO = injectDTOFromFile("src/test/resources/json/traineeManish.json");
+        traineeDTO = injectDTOFromFile("src/test/resources/json/IndividualTrainee.json");
     }
 
     @Nested
@@ -26,19 +27,19 @@ public class TraineeTests {
         }
 
         @Test
-        @DisplayName("Name is Manish The-Beast Test")
-        void fullNameTest() {Assertions.assertEquals("manish the-beast", traineeDTO.getFullName());}
+        @DisplayName("Name is Correct Test")
+        void fullNameTest() {Assertions.assertEquals("Keri Valdez", traineeDTO.getFullName());}
 
         @Test
         @DisplayName("StartDate as Date Returns Correct Date Test")
         void startDateAsDateTest() {
-            Assertions.assertEquals(LocalDate.of(2010, 1, 1), traineeDTO.getStartDateAsDate());
+            Assertions.assertEquals(LocalDate.of(2022, 2, 5), traineeDTO.getStartDateAsDate());
         }
 
         @Test
         @DisplayName("EndDate as Date Returns Correct Date Test")
         void endDateAsDateTest() {
-            Assertions.assertEquals(LocalDate.of(2010, 12, 12), traineeDTO.getEndDateAsDate());
+            Assertions.assertEquals(LocalDate.of(2022, 2, 4), traineeDTO.getEndDateAsDate());
         }
     }
 
@@ -46,16 +47,32 @@ public class TraineeTests {
     @DisplayName("TraineePOJO Tests")
     class TraineePojoTests {
         @Test
-        @DisplayName("First Name is Manish Test")
-        void firstNameTest() {Assertions.assertEquals("manish", traineeDTO.getFirstName());}
+        @DisplayName("First Name is Correct Test")
+        void firstNameTest() {Assertions.assertEquals("Keri", traineeDTO.getFirstName());}
 
         @Test
-        @DisplayName("Last Name is the-beast Test")
-        void lastNameTest() {Assertions.assertEquals("the-beast", traineeDTO.getLastName());}
+        @DisplayName("Last Name is Correct Test")
+        void lastNameTest() {Assertions.assertEquals("Valdez", traineeDTO.getLastName());}
 
         @Test
         @DisplayName("Course Start Date is Correct")
-        void courseStartIsCorrect() {Assertions.assertEquals("2010-01-01", traineeDTO.getCourseStartDate());}
+        void courseStartIsCorrect() {Assertions.assertEquals("2022-02-05", traineeDTO.getCourseStartDate());}
+
+        @Test
+        @DisplayName("Course End Date is Correct")
+        void courseEndDateIsCorrect() {Assertions.assertEquals("2022-02-04", traineeDTO.getCourseEndDate());}
+
+        @Test
+        @DisplayName("Course ID is Correct")
+        void courseIdIsCorrectTest() {Assertions.assertEquals(1, traineeDTO.getCourseId());}
+
+        @Test
+        @DisplayName("Trainee ID is an ID")
+        void traineeIdIsAnIdTest() {Assertions.assertInstanceOf(Id.class, traineeDTO.getId());}
+
+        @Test
+        @DisplayName("Trainee ID is Correct")
+        void traineeIdIsCorrectTest() {Assertions.assertEquals(new Id("620132158e281a4c868efd1d").getOid(), traineeDTO.getId().getOid());}
 
     }
 }

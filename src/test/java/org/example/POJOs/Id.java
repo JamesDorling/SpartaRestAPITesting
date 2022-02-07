@@ -18,4 +18,11 @@ public class Id{
 			"$oid = '" + oid + '\'' + 
 			"}";
 		}
+
+	public Id() {
+	}
+
+	public Id(String oid) {
+		this.oid = oid;
+	}
 }
