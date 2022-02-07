@@ -1,0 +1,21 @@
+package org.example.framework;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.example.DTOs.TraineeDTO;
+import java.net.URL;
+
+public class Injector {
+
+    public static TraineeDTO injectDTO(String URL) {
+        TraineeDTO traineeDTO = new TraineeDTO();
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        try {
+            traineeDTO = objectMapper.readValue(new URL(URL), TraineeDTO.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return traineeDTO;
+    }
+}
