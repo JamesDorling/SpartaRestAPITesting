@@ -2,14 +2,17 @@ package org.example.DTOs;
 
 import org.example.POJOs.TraineePojo;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 public class TraineeDTO extends TraineePojo {
     public String getFullName() {
-        return getFirstname() + " " + getLastName();
+        return getFirstName() + " " + getLastName();
     }
 
-    public LocalDateTime getStartDateAsDate() {
-        return LocalDateTime.parse(getCourseStartDate());
+    public LocalDate getStartDateAsDate() {
+        return LocalDate.parse(getCourseStartDate());
+    }
+    public LocalDate getEndDateAsDate() {
+        return LocalDate.parse(getCourseEndDate());
     }
 }

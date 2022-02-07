@@ -30,7 +30,7 @@ public class TraineePojo{
 		return courseId;
 	}
 
-	public String getFirstname(){
+	public String getFirstName(){
 		return firstname;
 	}
 
