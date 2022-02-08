@@ -2,7 +2,8 @@ package org.sparta.DTOs;
 
 public enum DTOEnum {
     TRAINEE,
-    COURSE;
+    COURSE,
+    TRAINEE_LIST;
 
     DTOEnum(){}
 }
