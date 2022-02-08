@@ -1,4 +1,4 @@
-package org.example.config;
+package org.sparta.config;
 
 import java.io.File;
 import java.io.FileWriter;
