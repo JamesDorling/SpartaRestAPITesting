@@ -40,6 +40,7 @@ public class ConnectionManager {
         HttpResponse<String> httpResponse = null;
         try {
             httpResponse = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+            LogManager.writeLog(Level.INFO, "Connected to server, http response is: " + httpResponse.toString());
         } catch (IOException | InterruptedException e) {
             LogManager.writeLog(Level.SEVERE, "Error sending HTTP request");
         }

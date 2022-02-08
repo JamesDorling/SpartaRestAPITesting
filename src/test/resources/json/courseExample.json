@@ -1,0 +1,8 @@
+{
+  "_id": "letters",
+  "course_id": 1,
+  "course_name": "Java",
+  "length": 8,
+  "isActive": true,
+  "description": "Java"
+}

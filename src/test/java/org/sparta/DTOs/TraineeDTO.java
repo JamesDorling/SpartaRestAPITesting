@@ -4,7 +4,7 @@ import org.sparta.POJOs.TraineePojo;
 
 import java.time.LocalDate;
 
-public class TraineeDTO extends TraineePojo {
+public class TraineeDTO extends TraineePojo implements DTO{
     public String getFullName() {
         return getFirstName() + " " + getLastName();
     }
