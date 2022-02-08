@@ -1,12 +1,15 @@
 package org.sparta.framework;
 
 import org.sparta.config.Config;
+import org.sparta.framework.logging.LogManager;
 
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ConnectionManager {
 
@@ -38,10 +41,8 @@ public class ConnectionManager {
         try {
             httpResponse = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
         } catch (IOException | InterruptedException e) {
-            //e.printStackTrace();
+            LogManager.writeLog(Level.SEVERE, "Error sending HTTP request");
         }
         return httpResponse;
     }
-
-
 }

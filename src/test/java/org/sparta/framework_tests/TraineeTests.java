@@ -84,13 +84,11 @@ public class TraineeTests {
 
         @Test
         @DisplayName("Start Date is after 0")
-        void startIsAfterTheCalendarStarted() {
-            Assertions.assertTrue(traineeDTO.startIsAfter(traineeDTO.getEndDateAsDate()));
-        }
+        void startIsAfterTheCalendarStarted() {Assertions.assertTrue(traineeDTO.startIsAfter(LocalDate.of(2022, 1, 1)));}
 
         @Test
-        @DisplayName("End Date is before the end times") //wont take Integer.MAX_VALUE, so settled on a bunch of 9s
-        void endIsBeforeTheEndOfTime() {Assertions.assertTrue(traineeDTO.endIsBefore(LocalDate.of(999999999, 1, 1)));}
+        @DisplayName("End Date is before the set max date")
+        void endIsBeforeTheEndOfTime() {Assertions.assertTrue(traineeDTO.endIsBefore(LocalDate.of(2050, 12, 31)));}
 
         @Test
         @DisplayName("Course Name is correct")
