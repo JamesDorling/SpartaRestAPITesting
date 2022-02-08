@@ -32,9 +32,26 @@ public class ConnectionManager {
         return getResponse().statusCode();
     }
 
+    public static int getStatusCode(String url) {
+        return getResponse(url).statusCode();
+    }
+
     private static HttpResponse<String> getResponse() {
         HttpClient httpClient = HttpClient.newHttpClient();
         HttpRequest httpRequest = HttpRequest.newBuilder().uri(URI.create(BASEURL + "/spartans")).build();
+        HttpResponse<String> httpResponse = null;
+        try {
+            httpResponse = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+            LogManager.writeLog(Level.INFO, "Connected to server, http response is: " + httpResponse.toString());
+        } catch (IOException | InterruptedException e) {
+            LogManager.writeLog(Level.SEVERE, "Error sending HTTP request");
+        }
+        return httpResponse;
+    }
+
+    private static HttpResponse<String> getResponse(String url) {
+        HttpClient httpClient = HttpClient.newHttpClient();
+        HttpRequest httpRequest = HttpRequest.newBuilder().uri(URI.create(url)).build();
         HttpResponse<String> httpResponse = null;
         try {
             httpResponse = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
