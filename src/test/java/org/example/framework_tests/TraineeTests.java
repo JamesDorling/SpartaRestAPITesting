@@ -1,5 +1,7 @@
 package org.example.framework_tests;
 
+import org.example.DTOs.DTO;
+import org.example.DTOs.DTOEnum;
 import org.example.DTOs.TraineeDTO;
 import org.junit.jupiter.api.*;
 
@@ -13,7 +15,8 @@ public class TraineeTests {
 
     @BeforeEach
     void init() {
-        traineeDTO = injectDTOFromFile("src/test/resources/json/traineeManish.json");
+        traineeDTO = (TraineeDTO) injectDTOFromFile("src/test/resources/json/traineeManish.json", DTOEnum.TRAINEE);
+//        traineeDTO = injectDTOFromFile("src/test/resources/json/traineeManish.json");
     }
 
     @Nested
