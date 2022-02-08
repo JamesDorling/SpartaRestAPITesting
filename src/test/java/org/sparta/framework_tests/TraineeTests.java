@@ -131,6 +131,16 @@ public class TraineeTests {
 
     @Nested
     @DisplayName("Crud Operation Tests")
-    class CrudOperationTests {}
+    class CrudOperationTests {
+        @Test
+        @DisplayName("Posting a trainee")
+        void postingATraineeTest() {
+            System.out.println(traineeList.get(0).getTraineeAsJson());
+            TraineeDTO newTrainee = new TraineeDTO("james", "dorling", 1, "2022-01-01");
+            ConnectionManager.sendTraineePostRequest(newTrainee.getTraineeAsJson(),
+                    ConnectionManager.makeUrl().spartan().link());
+
+        }
+    }
 
 }

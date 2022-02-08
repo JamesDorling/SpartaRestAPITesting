@@ -1,5 +1,6 @@
 package org.sparta.framework.connection;
 
+import org.sparta.DTOs.TraineeDTO;
 import org.sparta.config.Config;
 import org.sparta.framework.logging.LogManager;
 
@@ -35,6 +36,20 @@ public class ConnectionManager {
     private static HttpResponse<String> getResponse() {
         HttpClient httpClient = HttpClient.newHttpClient();
         HttpRequest httpRequest = HttpRequest.newBuilder().uri(URI.create(BASEURL + "/spartans")).build();
+        HttpResponse<String> httpResponse = null;
+        try {
+            httpResponse = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+            LogManager.writeLog(Level.INFO, "Connected to server, http response is: " + httpResponse.toString());
+        } catch (IOException | InterruptedException e) {
+            LogManager.writeLog(Level.SEVERE, "Error sending HTTP request");
+        }
+        return httpResponse;
+    }
+
+    public static HttpResponse<String> sendTraineePostRequest(String newTraineeJson, String url) {
+        HttpClient httpClient = HttpClient.newHttpClient();
+        HttpRequest httpRequest = HttpRequest.newBuilder().uri(URI.create(url)).POST(HttpRequest.BodyPublishers
+                        .ofString(newTraineeJson)).build();
         HttpResponse<String> httpResponse = null;
         try {
             httpResponse = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());

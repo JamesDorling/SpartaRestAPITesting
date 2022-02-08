@@ -5,6 +5,13 @@ import org.sparta.POJOs.TraineePojo;
 import java.time.LocalDate;
 
 public class TraineeDTO extends TraineePojo implements DTO{
+    public TraineeDTO() {
+    }
+
+    public TraineeDTO(String firstName, String lastName, Integer courseID, String courseStartDate) {
+        super(firstName, lastName, courseID, courseStartDate);
+    }
+
     public String getFullName() {
         return getFirstName() + " " + getLastName();
     }
@@ -43,5 +50,14 @@ public class TraineeDTO extends TraineePojo implements DTO{
             case 6 -> "business";
             default -> throw new IllegalStateException("Unexpected value (course ID): " + getCourseId());
         };
+    }
+
+    public String getTraineeAsJson() {
+        return "{\"id\":\"" + getId() +"\"," +
+                "\"firstName\":\""+ getFirstName() +"\"," +
+                "\"lastName\":\""+ getLastName() +"\"," +
+                "\"courseId\":\""+ getCourseId() +"\"," +
+                "\"courseStartDate\":\""+ getCourseStartDate() +"\"," +
+                "\"courseEndDate\":\""+ getCourseEndDate() +"\"}";
     }
 }
