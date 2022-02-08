@@ -1,4 +1,4 @@
-package org.example.framework.logging;
+package org.sparta.framework.logging;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

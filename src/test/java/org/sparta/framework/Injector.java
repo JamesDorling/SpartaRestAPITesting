@@ -1,7 +1,7 @@
-package org.example.framework;
+package org.sparta.framework;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.example.DTOs.TraineeDTO;
+import org.sparta.DTOs.TraineeDTO;
 
 import java.io.File;
 import java.net.URL;

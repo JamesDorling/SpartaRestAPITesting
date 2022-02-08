@@ -1,13 +1,13 @@
-package org.example.framework_tests;
+package org.sparta.framework_tests;
 
-import org.example.DTOs.TraineeDTO;
-import org.example.POJOs.Id;
+import org.sparta.DTOs.TraineeDTO;
+import org.sparta.POJOs.Id;
 import org.junit.jupiter.api.*;
 
 import java.time.LocalDate;
 
-import static org.example.framework.ConnectionManager.*;
-import static org.example.framework.Injector.*;
+import static org.sparta.framework.ConnectionManager.*;
+import static org.sparta.framework.Injector.*;
 
 public class TraineeTests {
     TraineeDTO traineeDTO;
@@ -41,6 +41,30 @@ public class TraineeTests {
         void endDateAsDateTest() {
             Assertions.assertEquals(LocalDate.of(2022, 2, 4), traineeDTO.getEndDateAsDate());
         }
+
+        @Test
+        @DisplayName("First Name is Not Null test")
+        void firstNameNotNull() {Assertions.assertTrue(traineeDTO.firstNameIsNotNull());}
+
+        @Test
+        @DisplayName("Last Name is Not Null test")
+        void lastNameNotNull() {Assertions.assertTrue(traineeDTO.lastNameIsNotNull());}
+
+        @Test
+        @DisplayName("Start Date is Not Null test")
+        void startDateNotNull() {Assertions.assertTrue(traineeDTO.startDateIsNotNull());}
+
+        @Test
+        @DisplayName("end Date is Not Null test")
+        void endDateNotNull() {Assertions.assertTrue(traineeDTO.endDateIsNotNull());}
+
+        @Test
+        @DisplayName("ID is Not Null test")
+        void idNotNull() {Assertions.assertTrue(traineeDTO.idIsNotNull());}
+
+        @Test
+        @DisplayName("Course ID is Not Null test")
+        void courseIdNotNull() {Assertions.assertTrue(traineeDTO.courseIdIsNotNull());}
     }
 
     @Nested

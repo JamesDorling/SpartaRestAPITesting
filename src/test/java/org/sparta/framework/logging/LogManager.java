@@ -1,4 +1,4 @@
-package org.example.framework.logging;
+package org.sparta.framework.logging;
 
 import java.io.IOException;
 import java.util.logging.*;
