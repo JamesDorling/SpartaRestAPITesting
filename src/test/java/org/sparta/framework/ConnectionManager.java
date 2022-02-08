@@ -9,6 +9,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ConnectionManager {
 
@@ -41,10 +42,8 @@ public class ConnectionManager {
             httpResponse = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
             LogManager.writeLog(Level.INFO, "Connected to server, http response is: " + httpResponse.toString());
         } catch (IOException | InterruptedException e) {
-            //e.printStackTrace();
+            LogManager.writeLog(Level.SEVERE, "Error sending HTTP request");
         }
         return httpResponse;
     }
-
-
 }
