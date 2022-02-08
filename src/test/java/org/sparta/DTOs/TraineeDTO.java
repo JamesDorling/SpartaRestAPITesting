@@ -28,4 +28,20 @@ public class TraineeDTO extends TraineePojo {
     public boolean idIsNotNull() {return getId() != null;}
     public boolean courseIdIsNotNull() {return getCourseId() != null;}
 
+    public boolean noDataIsNull() {return firstNameIsNotNull() && lastNameIsNotNull() && startDateIsNotNull() && endDateIsNotNull() && idIsNotNull() && courseIdIsNotNull();}
+
+    public boolean startIsBeforeEnd() {return startIsBefore(getEndDateAsDate());}
+    public boolean endIsAfterStart() {return endIsAfter(getStartDateAsDate());}
+
+    public String getCourseName() {
+        return switch (getCourseId()) {
+            case 1 -> "java";
+            case 2 -> "c#";
+            case 3 -> "data";
+            case 4 -> "devops";
+            case 5 -> "cyber security";
+            case 6 -> "business";
+            default -> throw new IllegalStateException("Unexpected value (course ID): " + getCourseId());
+        };
+    }
 }
