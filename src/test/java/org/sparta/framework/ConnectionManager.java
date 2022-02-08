@@ -1,12 +1,14 @@
 package org.sparta.framework;
 
 import org.sparta.config.Config;
+import org.sparta.framework.logging.LogManager;
 
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.logging.Level;
 
 public class ConnectionManager {
 
@@ -37,6 +39,7 @@ public class ConnectionManager {
         HttpResponse<String> httpResponse = null;
         try {
             httpResponse = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+            LogManager.writeLog(Level.INFO, "Connected to server, http response is: " + httpResponse.toString());
         } catch (IOException | InterruptedException e) {
             //e.printStackTrace();
         }
