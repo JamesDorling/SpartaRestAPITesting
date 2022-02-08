@@ -17,7 +17,7 @@ public class CoursePojo{
 	private String description;
 
 	@JsonProperty("_id")
-	private String id;
+	private Id id;
 
 	@JsonProperty("isActive")
 	private Boolean isActive;
@@ -38,7 +38,7 @@ public class CoursePojo{
 		return description;
 	}
 
-	public String getId(){
+	public Id getId(){
 		return id;
 	}
 
