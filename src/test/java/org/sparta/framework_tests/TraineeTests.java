@@ -66,6 +66,36 @@ public class TraineeTests {
         @Test
         @DisplayName("Course ID is Not Null test")
         void courseIdNotNull() {Assertions.assertTrue(traineeDTO.courseIdIsNotNull());}
+
+        @Test
+        @DisplayName("No Data is Null")
+        void noDataIsNull() {Assertions.assertTrue(traineeDTO.noDataIsNull());}
+
+        @Test
+        @DisplayName("Start Date is before End Date")
+        void startIsBeforeEnd() {
+            Assertions.assertTrue(traineeDTO.startIsBeforeEnd());
+        }
+
+        @Test
+        @DisplayName("End Date is after Start Date") //Redundant test, but if one fails and one passes something is up
+        void endIsAfterStart() {
+            Assertions.assertTrue(traineeDTO.endIsAfterStart());
+        }
+
+        @Test
+        @DisplayName("Start Date is after 0")
+        void startIsAfterTheCalendarStarted() {
+            Assertions.assertTrue(traineeDTO.startIsAfter(traineeDTO.getEndDateAsDate()));
+        }
+
+        @Test
+        @DisplayName("End Date is before the end times") //wont take Integer.MAX_VALUE, so settled on a bunch of 9s
+        void endIsBeforeTheEndOfTime() {Assertions.assertTrue(traineeDTO.endIsBefore(LocalDate.of(999999999, 1, 1)));}
+
+        @Test
+        @DisplayName("Course Name is correct")
+        void courseNameIsCorrect() {Assertions.assertEquals("java", traineeDTO.getCourseName());}
     }
 
     @Nested
@@ -98,6 +128,5 @@ public class TraineeTests {
         @Test
         @DisplayName("Trainee ID is Correct")
         void traineeIdIsCorrectTest() {Assertions.assertEquals(new Id("620132158e281a4c868efd1d").getOid(), traineeDTO.getId().getOid());}
-
     }
 }

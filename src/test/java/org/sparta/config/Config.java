@@ -1,10 +1,13 @@
 package org.sparta.config;
 
+import org.sparta.framework.logging.LogManager;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Properties;
+import java.util.logging.Level;
 //import api_testing.config.DefaultConfigMaker;
 
 public class Config {
@@ -23,6 +26,8 @@ public class Config {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        LogManager.writeLog(Level.CONFIG, "Loaded config from file");
     }
 
     //Getters for the properties

@@ -5,9 +5,11 @@ import org.sparta.DTOs.CourseDTO;
 import org.sparta.DTOs.DTO;
 import org.sparta.DTOs.DTOEnum;
 import org.sparta.DTOs.TraineeDTO;
+import org.sparta.framework.logging.LogManager;
 
 import java.io.File;
 import java.net.URL;
+import java.util.logging.Level;
 
 public class Injector {
 
@@ -33,6 +35,7 @@ public class Injector {
             e.printStackTrace();
         }
 
+        LogManager.writeLog(Level.INFO, "DTO injected from URL");
         return dto;
     }
 
@@ -58,6 +61,7 @@ public class Injector {
             e.printStackTrace();
         }
 
+        LogManager.writeLog(Level.INFO, "DTO injected from file");
         return dto;
     }
 
