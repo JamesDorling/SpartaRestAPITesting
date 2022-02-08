@@ -1,5 +1,6 @@
 package org.sparta.framework_tests;
 
+import org.sparta.DTOs.DTOEnum;
 import org.sparta.DTOs.TraineeDTO;
 import org.sparta.POJOs.Id;
 import org.junit.jupiter.api.*;
@@ -14,7 +15,7 @@ public class TraineeTests {
 
     @BeforeEach
     void init() {
-        traineeDTO = injectDTOFromFile("src/test/resources/json/IndividualTrainee.json");
+        traineeDTO = (TraineeDTO) injectDTOFromFile("src/test/resources/json/IndividualTrainee.json", DTOEnum.TRAINEE);
     }
 
     @Nested

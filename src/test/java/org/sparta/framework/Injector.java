@@ -1,10 +1,9 @@
 package org.sparta.framework;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.example.DTOs.CourseDTO;
-import org.example.DTOs.DTO;
-import org.example.DTOs.DTOEnum;
-import org.example.DTOs.TraineeDTO;
+import org.sparta.DTOs.CourseDTO;
+import org.sparta.DTOs.DTO;
+import org.sparta.DTOs.DTOEnum;
 import org.sparta.DTOs.TraineeDTO;
 
 import java.io.File;
@@ -21,7 +20,7 @@ public class Injector {
         try {
             switch (dtoType) {
                 case TRAINEE -> {
-                    dto = new TraineeDTO();
+                    dto =  new TraineeDTO();
                     dto = objectMapper.readValue(new URL(URL), TraineeDTO.class);
                 }
                 case COURSE -> {

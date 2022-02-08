@@ -1,4 +1,4 @@
-package org.example.DTOs;
+package org.sparta.DTOs;
 
 public enum DTOEnum {
     TRAINEE,

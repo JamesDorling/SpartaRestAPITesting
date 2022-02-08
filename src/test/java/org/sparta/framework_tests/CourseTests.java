@@ -1,11 +1,11 @@
-package org.example.framework_tests;
+package org.sparta.framework_tests;
 
-import org.example.DTOs.CourseDTO;
-import org.example.DTOs.DTOEnum;
+import org.sparta.DTOs.CourseDTO;
+import org.sparta.DTOs.DTOEnum;
 import org.junit.jupiter.api.*;
 
-import static org.example.framework.ConnectionManager.getStatusCode;
-import static org.example.framework.Injector.injectDTOFromFile;
+import static org.sparta.framework.ConnectionManager.getStatusCode;
+import static org.sparta.framework.Injector.injectDTOFromFile;
 
 public class CourseTests {
 
