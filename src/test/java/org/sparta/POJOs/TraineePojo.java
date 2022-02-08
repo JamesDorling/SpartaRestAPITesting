@@ -7,14 +7,14 @@ public class TraineePojo{
 	@JsonProperty("lastName")
 	private String lastName;
 
-	@JsonProperty("course_id")
+	@JsonProperty("courseId")
 	private Integer courseId;
 
 	@JsonProperty("firstname")
 	private String firstname;
 
-	@JsonProperty("_id")
-	private Id id;
+	@JsonProperty("id")
+	private String id;
 
 	@JsonProperty("courseEndDate")
 	private String courseEndDate;
@@ -34,7 +34,7 @@ public class TraineePojo{
 		return firstname;
 	}
 
-	public Id getId(){
+	public String getId(){
 		return id;
 	}
 

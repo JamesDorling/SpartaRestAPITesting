@@ -1,23 +1,21 @@
 package org.sparta.POJOs;
 
-import java.util.List;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.sparta.DTOs.TraineeDTO;
 
 public class TraineePojoList{
 
-	@JsonProperty("TraineePojoList")
-	private List<TraineeDTO> traineePojoList;
+	@JsonProperty("_embedded")
+	private SpartanEmbedded embedded;
 
-	public List<TraineeDTO> getTraineeDTOList(){
-		return traineePojoList;
+	public SpartanEmbedded getEmbedded(){
+		return embedded;
 	}
 
 	@Override
  	public String toString(){
 		return 
 			"TraineePojoList{" + 
-			"traineePojoList = '" + traineePojoList + '\'' + 
+			"_embedded = '" + embedded + '\'' + 
 			"}";
 		}
 }
