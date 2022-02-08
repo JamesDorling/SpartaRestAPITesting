@@ -34,7 +34,7 @@ public class ConnectionManager {
 
     private static HttpResponse<String> getResponse() {
         HttpClient httpClient = HttpClient.newHttpClient();
-        HttpRequest httpRequest = HttpRequest.newBuilder().uri(URI.create(BASEURL)).build();
+        HttpRequest httpRequest = HttpRequest.newBuilder().uri(URI.create(BASEURL + "/spartans")).build();
         HttpResponse<String> httpResponse = null;
         try {
             httpResponse = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
