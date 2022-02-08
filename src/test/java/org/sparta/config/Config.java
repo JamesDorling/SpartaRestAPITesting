@@ -1,6 +1,4 @@
-package org.example.config;
-
-import org.example.config.DefaultConfigMaker;
+package org.sparta.config;
 
 import java.io.BufferedReader;
 import java.io.File;

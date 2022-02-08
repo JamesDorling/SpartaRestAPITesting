@@ -1,0 +1,10 @@
+{
+  "_id": {
+    "$oid": "620132158e281a4c868efd1d"
+  },
+  "firstname": "Keri",
+  "lastName": "Valdez",
+  "course_id": 1,
+  "courseStartDate": "2022-02-05",
+  "courseEndDate": "2022-02-04"
+}

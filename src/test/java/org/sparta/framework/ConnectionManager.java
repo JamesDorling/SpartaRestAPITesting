@@ -1,13 +1,12 @@
-package org.example.framework;
+package org.sparta.framework;
 
-import org.example.config.Config;
+import org.sparta.config.Config;
 
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.logging.Logger;
 
 public class ConnectionManager {
 

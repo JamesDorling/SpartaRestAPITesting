@@ -1,4 +1,4 @@
-package org.example.POJOs;
+package org.sparta.POJOs;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

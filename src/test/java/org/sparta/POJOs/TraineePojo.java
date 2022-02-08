@@ -1,4 +1,4 @@
-package org.example.POJOs;
+package org.sparta.POJOs;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -8,13 +8,13 @@ public class TraineePojo{
 	private String lastName;
 
 	@JsonProperty("course_id")
-	private String courseId;
+	private Integer courseId;
 
 	@JsonProperty("firstname")
 	private String firstname;
 
 	@JsonProperty("_id")
-	private String id;
+	private Id id;
 
 	@JsonProperty("courseEndDate")
 	private String courseEndDate;
@@ -26,7 +26,7 @@ public class TraineePojo{
 		return lastName;
 	}
 
-	public String getCourseId(){
+	public Integer getCourseId(){
 		return courseId;
 	}
 
@@ -34,7 +34,7 @@ public class TraineePojo{
 		return firstname;
 	}
 
-	public String getId(){
+	public Id getId(){
 		return id;
 	}
 
