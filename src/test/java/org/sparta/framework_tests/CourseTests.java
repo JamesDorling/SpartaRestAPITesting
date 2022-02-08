@@ -3,8 +3,10 @@ package org.sparta.framework_tests;
 import org.sparta.DTOs.CourseDTO;
 import org.sparta.DTOs.DTOEnum;
 import org.junit.jupiter.api.*;
+import org.sparta.framework.connection.ConnectionManager;
 
-import static org.sparta.framework.ConnectionManager.getStatusCode;
+import static org.sparta.framework.Injector.injectDTO;
+import static org.sparta.framework.connection.ConnectionManager.getStatusCode;
 import static org.sparta.framework.Injector.injectDTOFromFile;
 
 public class CourseTests {

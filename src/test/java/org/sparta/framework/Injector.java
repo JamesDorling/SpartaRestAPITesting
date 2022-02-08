@@ -1,14 +1,13 @@
 package org.sparta.framework;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.sparta.DTOs.CourseDTO;
-import org.sparta.DTOs.DTO;
-import org.sparta.DTOs.DTOEnum;
-import org.sparta.DTOs.TraineeDTO;
+import org.sparta.DTOs.*;
 import org.sparta.framework.logging.LogManager;
 
 import java.io.File;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 
 public class Injector {
@@ -28,6 +27,10 @@ public class Injector {
                 case COURSE -> {
                     dto = new CourseDTO();
                     dto = objectMapper.readValue(new URL(URL), CourseDTO.class);
+                }
+                case TRAINEE_LIST -> {
+                    dto = new TraineeDTOList();
+                    dto = objectMapper.readValue(new URL(URL), TraineeDTOList.class);
                 }
             }
         }
@@ -55,6 +58,10 @@ public class Injector {
                     dto = new CourseDTO();
                     dto = objectMapper.readValue(new File(file), CourseDTO.class);
                 }
+                case TRAINEE_LIST -> {
+                    dto = new TraineeDTOList();
+                    dto = objectMapper.readValue(new File(file), TraineeDTOList.class);
+                }
             }
         }
         catch (Exception e){
@@ -64,5 +71,4 @@ public class Injector {
         LogManager.writeLog(Level.INFO, "DTO injected from file");
         return dto;
     }
-
 }
