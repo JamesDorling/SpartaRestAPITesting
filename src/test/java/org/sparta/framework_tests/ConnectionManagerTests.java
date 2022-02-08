@@ -1,4 +1,4 @@
-package org.example.framework_tests;
+package org.sparta.framework_tests;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;

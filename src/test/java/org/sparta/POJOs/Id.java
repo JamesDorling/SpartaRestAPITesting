@@ -1,4 +1,4 @@
-package org.example.POJOs;
+package org.sparta.POJOs;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -18,4 +18,11 @@ public class Id{
 			"$oid = '" + oid + '\'' + 
 			"}";
 		}
+
+	public Id() {
+	}
+
+	public Id(String oid) {
+		this.oid = oid;
+	}
 }
