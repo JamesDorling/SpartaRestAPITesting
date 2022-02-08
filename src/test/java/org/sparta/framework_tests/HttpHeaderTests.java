@@ -11,6 +11,9 @@ import java.net.http.HttpClient;
 import java.net.http.HttpHeaders;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
@@ -18,7 +21,7 @@ public class HttpHeaderTests {
 
     private static final HttpClient CLIENT = HttpClient.newHttpClient();
     private static final HttpRequest REQUEST = HttpRequest.newBuilder()
-            .uri(URI.create("https://api.chucknorris.io/jokes/random"))
+            .uri(URI.create("http://localhost:8080/spartans"))
             .build();
     private static Map<String, List<String>> headerMap;
 
@@ -41,15 +44,24 @@ public class HttpHeaderTests {
     }
 
     @Test
-    @DisplayName("Check status code is 200")
-    void checkStatusCodeIs200() {
-        Assertions.assertEquals(headerMap.get(":status").get(0), "200");
+    @DisplayName("Check content type is correct")
+    void checkContentTypeIsCorrect() {
+        Assertions.assertEquals("application/hal+json", headerMap.get("content-type").get(0));
     }
 
     @Test
-    @DisplayName("Check server is cloudflare")
-    void checkServerIsCloudflare() {
-        Assertions.assertEquals(headerMap.get("server").get(0), "cloudflare");
+    @DisplayName("Check transfer-encoding is chunked")
+    void checkTransferEncodingIsChunked() {
+        Assertions.assertEquals("chunked", headerMap.get("Transfer-Encoding").get(0));
+    }
+
+    @Test
+    @DisplayName("Check date format is correct")
+    void checkDateFormatIsCorrect() {
+        LocalDate currentTime = LocalDate.parse(LocalDateTime.now()
+                .format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+
+//        Assertions.assertEquals(currentTime, headerMap.get("date").get(0));
     }
 
 
