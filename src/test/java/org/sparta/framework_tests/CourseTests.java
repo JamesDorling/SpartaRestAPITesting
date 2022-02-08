@@ -1,22 +1,37 @@
 package org.sparta.framework_tests;
 
+import org.junit.jupiter.api.*;
 import org.sparta.DTOs.CourseDTO;
 import org.sparta.DTOs.DTOEnum;
-import org.junit.jupiter.api.*;
+import org.sparta.POJOs.CourseListPojos.CourseList;
 import org.sparta.framework.connection.ConnectionManager;
-import org.sparta.POJOs.Id;
+
+import java.util.List;
+import java.util.Objects;
 
 import static org.sparta.framework.Injector.injectDTO;
 import static org.sparta.framework.connection.ConnectionManager.getStatusCode;
-import static org.sparta.framework.Injector.injectDTOFromFile;
 
 public class CourseTests {
 
-    private CourseDTO courseDTO;
+    private static CourseDTO firstCourse;
+    private static final String allCoursesURL = ConnectionManager.makeUrl().course().link();
+    private static CourseDTO devOpsCourse;
+    private static CourseDTO id2Course;
 
-    @BeforeEach
-    void init() {
-        courseDTO = (CourseDTO) injectDTOFromFile("src/test/resources/json/courseExample.json", DTOEnum.COURSE);
+    @BeforeAll
+    static void init() {
+        CourseList courseDTOWrapper = (CourseList) injectDTO(allCoursesURL, DTOEnum.COURSE_LIST);
+        List<CourseDTO> coursePojoList = courseDTOWrapper.getEmbedded().getCourseDTOList();
+        firstCourse = coursePojoList.get(0);
+        for (CourseDTO course: coursePojoList) {
+            if (Objects.equals(course.getCourseName(), "DevOps")){
+                devOpsCourse = course;
+            }
+            if (course.getCourseId() == 2){
+                id2Course = course;
+            }
+        }
     }
 
     @Nested
@@ -26,39 +41,32 @@ public class CourseTests {
         @Test
         @DisplayName("Course Id is not Null")
         void courseIdIsNotNull(){
-            Assertions.assertTrue(courseDTO.courseIdIsNotNull());
+            Assertions.assertTrue(firstCourse.courseIdIsNotNull());
         }
 
         @Test
         @DisplayName("Course Name is not Null")
         void courseNameIsNotNull(){
-            Assertions.assertTrue(courseDTO.courseNameIsNotNull());
+            Assertions.assertTrue(firstCourse.courseNameIsNotNull());
         }
 
         @Test
         @DisplayName("Course length is not Null")
         void courseLengthIsNotNull(){
-            Assertions.assertTrue(courseDTO.lengthIsNotNull());
+            Assertions.assertTrue(firstCourse.lengthIsNotNull());
         }
 
         @Test
         @DisplayName("Course Description is not Null")
         void courseDescriptionIsNotNull(){
-            Assertions.assertTrue(courseDTO.descriptionIsNotNull());
-        }
-
-        @Test
-        @DisplayName("Object Id is not Null")
-        void objectIdIsNotNull(){
-            Assertions.assertTrue(courseDTO.idIsNotNull());
+            Assertions.assertTrue(firstCourse.descriptionIsNotNull());
         }
 
         @Test
         @DisplayName("isActive is not Null")
         void isActiveIsNotNull(){
-            Assertions.assertTrue(courseDTO.isActiveIsNotNull());
+            Assertions.assertTrue(firstCourse.isActiveIsNotNull());
         }
-
     }
 
     @Nested
@@ -68,32 +76,24 @@ public class CourseTests {
         @Test
         @DisplayName("Successful Connection Test")
         void connectionCode200Test() {
-            Assertions.assertEquals(200, getStatusCode());
+            Assertions.assertEquals(200, getStatusCode(allCoursesURL));
         }
 
         @Test
-        @DisplayName("Id is an object Id")
-        void idIsAnObjectId() {Assertions.assertInstanceOf(Id.class, courseDTO.getId());}
-
-        @Test
-        @DisplayName("Object Id is correct")
-        void objectIdIsCorrect(){Assertions.assertEquals(new Id("620133dbb76917a6dcd28f17").getOid(), courseDTO.getId().getOid());}
-
-        @Test
         @DisplayName("Course name is retrievable")
-        void getCourseNameTest(){Assertions.assertEquals("Business", courseDTO.getCourseName());}
+        void getCourseNameTest(){Assertions.assertEquals("C#", id2Course.getCourseName());}
 
         @Test
         @DisplayName("Length of course is retrievable")
-        void getLengthOfCourseTest(){Assertions.assertEquals(5, courseDTO.getLength());}
+        void getLengthOfCourseTest(){Assertions.assertEquals(8, id2Course.getLength());}
 
         @Test
         @DisplayName("Course Id is retrievable")
-        void getCourseIdTest(){Assertions.assertEquals(6, courseDTO.getCourseId());}
+        void getCourseIdTest(){Assertions.assertEquals(4, devOpsCourse.getCourseId());}
 
         @Test
         @DisplayName("Activation status is retrievable")
-        void getActivationStatusTest(){Assertions.assertEquals(true, courseDTO.isIsActive());}
+        void getActivationStatusTest(){Assertions.assertEquals(true, devOpsCourse.isIsActive());}
     }
 
 }
