@@ -120,7 +120,7 @@ public class ConnectionManager {
         }
 
         public UrlBuilder courseName(String course) {
-            link.append("courseName=").append(course).append("&");
+            link.append("name=").append(course).append("&");
             return this;
         }
 
