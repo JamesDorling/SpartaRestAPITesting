@@ -44,4 +44,13 @@ public class TraineeDTO extends TraineePojo implements DTO{
             default -> throw new IllegalStateException("Unexpected value (course ID): " + getCourseId());
         };
     }
+
+    public String getTraineeAsJson() {
+        return "{\"id\":\"" + getId() +"\"," +
+                "\"firstname\":\""+ getFirstName() +"\"," +
+                "\"lastName\":\""+ getLastName() +"\"," +
+                "\"courseId\":\""+ getCourseId() +"\"," +
+                "\"courseStartDate\":\""+ getCourseStartDate() +"\"," +
+                "\"courseEndDate\":\""+ getCourseEndDate() +"\"}";
+    }
 }

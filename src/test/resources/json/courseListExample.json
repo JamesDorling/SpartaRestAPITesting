@@ -1,0 +1,62 @@
+{
+  "_embedded": {
+    "courseEntityList": [
+      {
+        "courseId": 1,
+        "courseName": "Java",
+        "description": "Java",
+        "length": 8,
+        "active": true
+      },
+      {
+        "courseId": 2,
+        "courseName": "C#",
+        "description": "C#",
+        "length": 8,
+        "active": true
+      },
+      {
+        "courseId": 3,
+        "courseName": "Data",
+        "description": "Data",
+        "length": 8,
+        "active": true
+      },
+      {
+        "courseId": 4,
+        "courseName": "DevOps",
+        "description": "DevOps",
+        "length": 8,
+        "active": true
+      },
+      {
+        "courseId": 5,
+        "courseName": "Cyber Security",
+        "description": "Cyber Security",
+        "length": 8,
+        "active": true
+      },
+      {
+        "courseId": 6,
+        "courseName": "Business",
+        "description": "Business",
+        "length": 5,
+        "active": true
+      },
+      {
+        "courseId": 8,
+        "courseName": "Dum2",
+        "description": "Dum",
+        "length": 15,
+        "active": true
+      },
+      {
+        "courseId": 1,
+        "courseName": "Java",
+        "description": "Java",
+        "length": 10,
+        "active": true
+      }
+    ]
+  }
+}

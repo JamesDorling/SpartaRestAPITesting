@@ -6,9 +6,12 @@ import org.sparta.DTOs.TraineeDTOList;
 import org.sparta.POJOs.Id;
 import org.junit.jupiter.api.*;
 import org.sparta.POJOs.SpartanEmbedded;
+import org.sparta.crud_forms.TraineeForm;
 import org.sparta.framework.connection.ConnectionManager;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.sparta.framework.connection.ConnectionManager.*;
@@ -34,18 +37,18 @@ public class TraineeTests {
 
         @Test
         @DisplayName("Name is Correct Test")
-        void fullNameTest() {Assertions.assertEquals("Keri Valdez", traineeList.get(0).getFullName());}
+        void fullNameTest() {Assertions.assertEquals("Macias Monroe", traineeList.get(0).getFullName());}
 
         @Test
         @DisplayName("StartDate as Date Returns Correct Date Test")
         void startDateAsDateTest() {
-            Assertions.assertEquals(LocalDate.of(2022, 6, 6), traineeList.get(0).getStartDateAsDate());
+            Assertions.assertEquals(LocalDate.of(2022, 2, 8), traineeList.get(0).getStartDateAsDate());
         }
 
         @Test
         @DisplayName("EndDate as Date Returns Correct Date Test")
         void endDateAsDateTest() {
-            Assertions.assertEquals(LocalDate.of(2022, 2, 6), traineeList.get(0).getEndDateAsDate());
+            Assertions.assertEquals(LocalDate.of(2022, 3, 15), traineeList.get(0).getEndDateAsDate());
         }
 
         @Test
@@ -98,7 +101,7 @@ public class TraineeTests {
 
         @Test
         @DisplayName("Course Name is correct")
-        void courseNameIsCorrect() {Assertions.assertEquals("java", traineeList.get(0).getCourseName());}
+        void courseNameIsCorrect() {Assertions.assertEquals("business", traineeList.get(0).getCourseName());}
     }
 
     @Nested
@@ -106,31 +109,53 @@ public class TraineeTests {
     class TraineePojoTests {
         @Test
         @DisplayName("First Name is Correct Test")
-        void firstNameTest() {Assertions.assertEquals("Keri", traineeList.get(0).getFirstName());}
+        void firstNameTest() {Assertions.assertEquals("Macias", traineeList.get(0).getFirstName());}
 
         @Test
         @DisplayName("Last Name is Correct Test")
-        void lastNameTest() {Assertions.assertEquals("Valdez", traineeList.get(0).getLastName());}
+        void lastNameTest() {Assertions.assertEquals("Monroe", traineeList.get(0).getLastName());}
 
         @Test
         @DisplayName("Course Start Date is Correct")
-        void courseStartIsCorrect() {Assertions.assertEquals("2022-06-06", traineeList.get(0).getCourseStartDate());}
+        void courseStartIsCorrect() {Assertions.assertEquals("2022-02-08", traineeList.get(0).getCourseStartDate());}
 
         @Test
         @DisplayName("Course End Date is Correct")
-        void courseEndDateIsCorrect() {Assertions.assertEquals("2022-02-06", traineeList.get(0).getCourseEndDate());}
+        void courseEndDateIsCorrect() {Assertions.assertEquals("2022-03-15", traineeList.get(0).getCourseEndDate());}
 
         @Test
         @DisplayName("Course ID is Correct")
-        void courseIdIsCorrectTest() {Assertions.assertEquals(1, traineeList.get(0).getCourseId());}
+        void courseIdIsCorrectTest() {Assertions.assertEquals(6, traineeList.get(0).getCourseId());}
 
         @Test
         @DisplayName("Trainee ID is Correct")
-        void traineeIdIsCorrectTest() {Assertions.assertEquals("620132158e281a4c868efd1d", traineeList.get(0).getId());}
+        void traineeIdIsCorrectTest() {Assertions.assertEquals("6202722fc96c0d99e85b30c2", traineeList.get(0).getId());}
     }
 
     @Nested
     @DisplayName("Crud Operation Tests")
-    class CrudOperationTests {}
+    class CrudOperationTests {
+        @Test
+        @DisplayName("Posting a trainee")
+        void postingATraineeTest() {
+            System.out.println(traineeList.get(traineeList.size()-1).getTraineeAsJson());
+            TraineeForm newTrainee = new TraineeForm("james", "dorling", 1, "2023-01-01");
+            System.out.println(sendTraineePostRequest(newTrainee.getJson(), makeUrl().spartan().link()).body());
+
+
+
+            TraineeDTOList traineeDTOList = (TraineeDTOList) injectDTO(ConnectionManager.makeUrl().spartan().link(), DTOEnum.TRAINEE_LIST);
+            System.out.println(newTrainee.getJson());
+            traineeList = traineeDTOList.getEmbedded().getSpartanEntityList();
+            System.out.println(traineeList.get(traineeList.size()-1).getTraineeAsJson());
+            Assertions.assertEquals("james", traineeList.get(traineeList.size()-1).getFirstName());
+        }
+
+        @Test
+        @DisplayName("Putting a trainee")
+        void puttingATrainee() {
+
+        }
+    }
 
 }
