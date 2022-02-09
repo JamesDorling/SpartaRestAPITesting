@@ -4,10 +4,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class CoursePojo{
 
-	@JsonProperty("course_id")
+	@JsonProperty("courseId")
 	private Integer courseId;
 
-	@JsonProperty("course_name")
+	@JsonProperty("courseName")
 	private String courseName;
 
 	@JsonProperty("length")
@@ -16,11 +16,8 @@ public class CoursePojo{
 	@JsonProperty("description")
 	private String description;
 
-	@JsonProperty("_id")
-	private Id id;
-
-	@JsonProperty("isActive")
-	private Boolean isActive;
+	@JsonProperty("active")
+	private Boolean active;
 
 	public Integer getCourseId(){
 		return courseId;
@@ -38,12 +35,8 @@ public class CoursePojo{
 		return description;
 	}
 
-	public Id getId(){
-		return id;
-	}
-
 	public Boolean isIsActive(){
-		return isActive;
+		return active;
 	}
 
 	@Override
@@ -53,9 +46,8 @@ public class CoursePojo{
 			"course_id = '" + courseId + '\'' + 
 			",course_name = '" + courseName + '\'' + 
 			",length = '" + length + '\'' + 
-			",description = '" + description + '\'' + 
-			",_id = '" + id + '\'' +
-			",isActive = '" + isActive + '\'' + 
+			",description = '" + description + '\'' +
+			",isActive = '" + active + '\'' +
 			"}";
 		}
 }

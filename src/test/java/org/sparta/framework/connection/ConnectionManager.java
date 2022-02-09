@@ -33,6 +33,10 @@ public class ConnectionManager {
         return getResponse().statusCode();
     }
 
+    public static int getStatusCode(String url) {
+        return getResponse(url).statusCode();
+    }
+
     private static HttpResponse<String> getResponse() {
         HttpClient httpClient = HttpClient.newHttpClient();
         HttpRequest httpRequest = HttpRequest.newBuilder().uri(URI.create(BASEURL + "/spartans")).build();
@@ -45,6 +49,7 @@ public class ConnectionManager {
         }
         return httpResponse;
     }
+
 
     public static HttpResponse<String> sendTraineePostRequest(String newTraineeJson, String url) {
         HttpClient httpClient = HttpClient.newHttpClient();
