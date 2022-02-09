@@ -15,19 +15,26 @@ import static org.sparta.framework.connection.ConnectionManager.getStatusCode;
 public class CourseTests {
 
     private static final String allCoursesURL = ConnectionManager.makeUrl().course().link();
-    private static List<CourseDTO> getAllCourses;
+    private static List<CourseDTO> allCoursesList;
     private static CourseDTO firstCourse;
     private static CourseDTO devOpsCourse;
     private static CourseDTO id2Course;
-    private static final String getCourseID3 = ConnectionManager.makeUrl().getSpecificCourse(3);
+
+    private static final String getCourseID3URL = ConnectionManager.makeUrl().getSpecificCourse(3);
     private static CourseDTO id3Course;
+
+    private static final String getAllActiveCoursesURL = ConnectionManager.makeUrl().getAllActiveCourses();
+    private static List<CourseDTO> allActiveCoursesList;
+
+    private static final String getAllInactiveCoursesURL = ConnectionManager.makeUrl().getAllInactiveCourses();
+    private static List<CourseDTO> allInactiveCoursesList;
 
     @BeforeAll
     static void init() {
         CourseList courseDTOWrapper = (CourseList) injectDTO(allCoursesURL, DTOEnum.COURSE_LIST);
-        getAllCourses = courseDTOWrapper.getEmbedded().getCourseDTOList();
-        firstCourse = getAllCourses.get(0);
-        for (CourseDTO course: getAllCourses) {
+        allCoursesList = courseDTOWrapper.getEmbedded().getCourseDTOList();
+        firstCourse = allCoursesList.get(0);
+        for (CourseDTO course: allCoursesList) {
             if (Objects.equals(course.getCourseName(), "DevOps")){
                 devOpsCourse = course;
             }
@@ -35,7 +42,15 @@ public class CourseTests {
                 id2Course = course;
             }
         }
-        id3Course = (CourseDTO) injectDTO(getCourseID3, DTOEnum.COURSE);
+        id3Course = (CourseDTO) injectDTO(getCourseID3URL, DTOEnum.COURSE);
+        courseDTOWrapper = (CourseList) injectDTO(getAllActiveCoursesURL, DTOEnum.COURSE_LIST);
+        if (courseDTOWrapper.getEmbedded()!= null){
+            allActiveCoursesList = courseDTOWrapper.getEmbedded().getCourseDTOList();
+        }
+        courseDTOWrapper = (CourseList) injectDTO(getAllInactiveCoursesURL, DTOEnum.COURSE_LIST);
+        if (courseDTOWrapper.getEmbedded()!= null) {
+            allInactiveCoursesList = courseDTOWrapper.getEmbedded().getCourseDTOList();
+        }
     }
 
     @Nested
@@ -91,7 +106,7 @@ public class CourseTests {
 
         @Test
         @DisplayName("Object id is retrievable")
-        void getObjectIDTest(){Assertions.assertEquals("6201338cb76917a6dcd28f15", devOpsCourse.getId());}
+        void getObjectIDTest(){Assertions.assertEquals("6203a71b147baa0d50338f5a", devOpsCourse.getId());}
 
         @Test
         @DisplayName("Course name is retrievable")
@@ -116,7 +131,7 @@ public class CourseTests {
         @Test
         @DisplayName("Successful Connection Test")
         void connectionCode200Test() {
-            Assertions.assertEquals(200, getStatusCode(getCourseID3));
+            Assertions.assertEquals(200, getStatusCode(getCourseID3URL));
         }
 
         @Test
@@ -138,5 +153,27 @@ public class CourseTests {
         @Test
         @DisplayName("Activation status is retrievable")
         void getActivationStatusTest(){Assertions.assertEquals(true, id3Course.isIsActive());}
+    }
+
+    @Nested
+    @DisplayName("Testing getting all active/inactive courses")
+    class TestingGettingAllActiveInactiveCourses {
+        @Test
+        @DisplayName("Are all of the returned active courses actually active?")
+        void areAllOfTheReturnedActiveCoursesActuallyActive() {
+            Assumptions.assumeFalse(allActiveCoursesList == null);
+            for (CourseDTO course: allActiveCoursesList) {
+                Assertions.assertTrue(course.isIsActive());
+            }
+        }
+
+        @Test
+        @DisplayName("Are all of the returned inactive courses actually inactive?")
+        void areAllOfTheReturnedInactiveCoursesActuallyInactive() {
+            Assumptions.assumeFalse(allInactiveCoursesList == null);
+            for (CourseDTO course: allInactiveCoursesList) {
+                Assertions.assertFalse(course.isIsActive());
+            }
+        }
     }
 }
