@@ -10,7 +10,6 @@ import org.sparta.framework.connection.ConnectionManager;
 import org.sparta.framework.connection.UrlBuilder;
 
 import java.time.LocalDate;
-import java.util.List;
 
 import static org.sparta.framework.connection.ConnectionManager.*;
 import static org.sparta.framework.Injector.*;
