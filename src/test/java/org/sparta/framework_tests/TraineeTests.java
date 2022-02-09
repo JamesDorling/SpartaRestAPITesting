@@ -197,9 +197,5 @@ public class TraineeTests {
             Assertions.assertTrue(traineeDTOList.getEmbedded().getSpartanEntityList().get(0).getEndDateAsDate()
                     .isAfter(LocalDate.of(2021, 1,1)));
         }
-
     }
-
-
-
 }
