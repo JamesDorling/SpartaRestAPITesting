@@ -11,8 +11,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpHeaders;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
@@ -58,10 +57,16 @@ public class HttpHeaderTests {
     @Test
     @DisplayName("Check date format is correct")
     void checkDateFormatIsCorrect() {
-        LocalDate currentTime = LocalDate.parse(LocalDateTime.now()
-                .format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+        ZonedDateTime currentTime = ZonedDateTime.now();
 
-//        Assertions.assertEquals(currentTime, headerMap.get("date").get(0));
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(headerMap.get("date").get(0));
+        if (sb.charAt(5) == '0') {
+            sb.deleteCharAt(5);
+        }
+
+        Assertions.assertEquals(DateTimeFormatter.RFC_1123_DATE_TIME.format(currentTime), sb.toString());
     }
 
 
