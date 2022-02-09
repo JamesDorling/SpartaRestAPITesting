@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Objects;
 
 import static org.sparta.framework.Injector.injectDTO;
-import static org.sparta.framework.connection.ConnectionManager.getStatusCode;
+import static org.sparta.framework.connection.ConnectionManager.*;
 
 public class CourseTests {
 
@@ -28,6 +28,11 @@ public class CourseTests {
 
     private static final String getAllInactiveCoursesURL = ConnectionManager.makeUrl().getAllInactiveCourses();
     private static List<CourseDTO> allInactiveCoursesList;
+
+    private static final String putCourseURL = ConnectionManager.makeUrl().getCourseWithKey();
+    private static CourseDTO putCourse;
+    private static String newCourseJson;
+    private static String getPutCourseURL;
 
     @BeforeAll
     static void init() {
@@ -51,6 +56,16 @@ public class CourseTests {
         if (courseDTOWrapper.getEmbedded()!= null) {
             allInactiveCoursesList = courseDTOWrapper.getEmbedded().getCourseDTOList();
         }
+
+        // Once there's a Course DeleteMapping, maybe change the example courseName and description
+        newCourseJson = "{\"courseId\":\""+ allCoursesList.size() + 1 +"\"," +
+                "\"courseName\":\""+ "WeNeedACourseDeleteMapping" +"\"," +
+                "\"length\":"+ 8 +"," +
+                "\"description\":\""+ "WeNeedACourseDeleteMapping" +"\"}" +
+                "\"active\":\""+ true +"\"}";
+        sendCoursePostRequest(newCourseJson, putCourseURL);
+        getPutCourseURL = ConnectionManager.makeUrl().getSpecificCourse(allCoursesList.size() + 1);
+        putCourse = (CourseDTO) injectDTO(getPutCourseURL, DTOEnum.COURSE);
     }
 
     @Nested
@@ -153,6 +168,32 @@ public class CourseTests {
         @Test
         @DisplayName("Activation status is retrievable")
         void getActivationStatusTest(){Assertions.assertEquals(true, id3Course.isIsActive());}
+    }
+
+    @Nested
+    @DisplayName("Testing to see if put function works properly")
+    class PutCourseTests{
+
+        @Test
+        @DisplayName("Course Id is retrievable")
+        void getCourseIdTest(){Assertions.assertEquals(allCoursesList.size() + 1, putCourse.getCourseId());}
+
+        @Test
+        @DisplayName("Object id is retrievable")
+        void getObjectIDTest(){
+            Assertions.assertEquals(24, putCourse.getId().length());}
+
+        @Test
+        @DisplayName("Course name is retrievable")
+        void getCourseNameTest(){Assertions.assertEquals("WeNeedACourseDeleteMapping", putCourse.getCourseName());}
+
+        @Test
+        @DisplayName("Length of course is retrievable")
+        void getLengthOfCourseTest(){Assertions.assertEquals(8, putCourse.getLength());}
+
+        @Test
+        @DisplayName("Activation status is retrievable")
+        void getActivationStatusTest(){Assertions.assertEquals(true, putCourse.isIsActive());}
     }
 
     @Nested
