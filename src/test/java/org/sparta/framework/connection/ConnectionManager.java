@@ -166,6 +166,14 @@ public class ConnectionManager {
             return link.append("/courses/").append(id).toString();
         }
 
+        public String getAllActiveCourses() {
+            return link.append("/courses/isActive").toString();
+        }
+
+        public String getAllInactiveCourses() {
+            return link.append("/courses/nonActive").toString();
+        }
+
         public String link() { //Trailing & is fine, still works
             return link.toString();
         }
