@@ -4,6 +4,7 @@ import org.junit.jupiter.api.*;
 import org.sparta.DTOs.CourseDTO;
 import org.sparta.DTOs.DTOEnum;
 import org.sparta.POJOs.CourseListPojos.CourseList;
+import org.sparta.POJOs.CourseListPojos.HATAEOSExtension.CourseSpartanLinks;
 import org.sparta.framework.connection.ConnectionManager;
 
 import java.util.List;
@@ -34,6 +35,14 @@ public class CourseTests {
     private static String newCourseJson;
     private static String getPutCourseURL;
 
+    private static final String courseName = "Java";
+    private static final String getCourseByName = ConnectionManager.makeUrl().course().courseName(courseName).link();
+    private static List<CourseDTO> courseWithName;
+    private static final String partialCourseName = "a";
+    private static final String getCourseByPartialName = ConnectionManager.makeUrl().course().courseName(partialCourseName).link();
+    private static List<CourseDTO> courseWithPartialName;
+
+
     @BeforeAll
     static void init() {
         CourseList courseDTOWrapper = (CourseList) injectDTO(allCoursesURL, DTOEnum.COURSE_LIST);
@@ -47,11 +56,14 @@ public class CourseTests {
                 id2Course = course;
             }
         }
+        
         id3Course = (CourseDTO) injectDTO(getCourseID3URL, DTOEnum.COURSE);
+        
         courseDTOWrapper = (CourseList) injectDTO(getAllActiveCoursesURL, DTOEnum.COURSE_LIST);
         if (courseDTOWrapper.getEmbedded()!= null){
             allActiveCoursesList = courseDTOWrapper.getEmbedded().getCourseDTOList();
         }
+
         courseDTOWrapper = (CourseList) injectDTO(getAllInactiveCoursesURL, DTOEnum.COURSE_LIST);
         if (courseDTOWrapper.getEmbedded()!= null) {
             allInactiveCoursesList = courseDTOWrapper.getEmbedded().getCourseDTOList();
@@ -66,6 +78,15 @@ public class CourseTests {
         sendCoursePostRequest(newCourseJson, putCourseURL);
         getPutCourseURL = ConnectionManager.makeUrl().getSpecificCourse(allCoursesList.size() + 1);
         putCourse = (CourseDTO) injectDTO(getPutCourseURL, DTOEnum.COURSE);
+
+        courseDTOWrapper = (CourseList) injectDTO(getCourseByName, DTOEnum.COURSE_LIST);
+        if (courseDTOWrapper.getEmbedded()!= null) {
+            courseWithName = courseDTOWrapper.getEmbedded().getCourseDTOList();
+        }
+        courseDTOWrapper = (CourseList) injectDTO(getCourseByPartialName, DTOEnum.COURSE_LIST);
+        if (courseDTOWrapper.getEmbedded()!= null) {
+            courseWithPartialName = courseDTOWrapper.getEmbedded().getCourseDTOList();
+        }
     }
 
     @Nested
@@ -106,6 +127,12 @@ public class CourseTests {
         @DisplayName("isActive is not Null")
         void isActiveIsNotNull(){
             Assertions.assertTrue(firstCourse.isActiveIsNotNull());
+        }
+
+        @Test
+        @DisplayName("links is not Null")
+        void linksIsNotNull(){
+            Assertions.assertTrue(firstCourse.linksIsNotNull());
         }
     }
 
@@ -168,6 +195,21 @@ public class CourseTests {
         @Test
         @DisplayName("Activation status is retrievable")
         void getActivationStatusTest(){Assertions.assertEquals(true, id3Course.isIsActive());}
+        
+        @Test
+        @DisplayName("Can HATEOAS links be found? ")
+        void canHateoasLinksBeFound() {
+            Assertions.assertTrue(id3Course.getLinks().getSpartanList().size() > 0);
+        }
+        
+        @Test
+        @DisplayName("Do HATEOAS links lead to valid URLs?")
+        void doHateoasLinksLeadToValidUrLs() {
+            for (CourseSpartanLinks courseSpartanLinks : id3Course.getLinks().getSpartanList()) {
+                Assertions.assertEquals(200, getStatusCode(courseSpartanLinks.getHref()));
+            }
+        }
+        
     }
 
     @Nested
@@ -199,6 +241,19 @@ public class CourseTests {
     @Nested
     @DisplayName("Testing getting all active/inactive courses")
     class TestingGettingAllActiveInactiveCourses {
+
+        @Test
+        @DisplayName("Successful Connection Test Active")
+        void connectionCode200TestActive() {
+            Assertions.assertEquals(200, getStatusCode(getAllActiveCoursesURL));
+        }
+
+        @Test
+        @DisplayName("Successful Connection Test Inactive")
+        void connectionCode200TestInactive() {
+            Assertions.assertEquals(200, getStatusCode(getAllInactiveCoursesURL));
+        }
+
         @Test
         @DisplayName("Are all of the returned active courses actually active?")
         void areAllOfTheReturnedActiveCoursesActuallyActive() {
@@ -217,4 +272,44 @@ public class CourseTests {
             }
         }
     }
+
+    @Nested
+    @DisplayName("Test searching for courses by name")
+    class TestSearchingForCoursesByName {
+
+        @Test
+        @DisplayName("Successful Connection Test Full Name")
+        void connectionCode200TestFull() {
+            Assertions.assertEquals(200, getStatusCode(getCourseByName));
+        }
+
+        @Test
+        @DisplayName("Successful Connection Test Partial Name")
+        void connectionCode200TestPartial() {
+            Assertions.assertEquals(200, getStatusCode(getCourseByPartialName));
+        }
+
+        @Test
+        @DisplayName("When searching with an exact name, is exactly one course found?")
+        void whenSearchingWithAnExactNameIsExactlyOneCourseFound() {
+            Assertions.assertEquals(1, courseWithName.size());
+        }
+
+        @Test
+        @DisplayName("Does searching by exact name bring up the expected course?")
+        void doesSearchingByExactNameBringUpTheExpectedCourse() {
+            CourseDTO foundCourse = courseWithName.get(0);
+            Assertions.assertEquals(courseName,foundCourse.getCourseName());
+        }
+
+        @Test
+        @DisplayName("When searching by partial name, do all matches contain the string?")
+        void whenSearchingByPartialNameDoAllMatchesContainTheString() {
+            Assumptions.assumeFalse(courseWithPartialName == null);
+            for (CourseDTO courseDTO : courseWithPartialName) {
+                Assertions.assertTrue(courseDTO.getCourseName().contains(partialCourseName));
+            }
+        }
+    }
+
 }

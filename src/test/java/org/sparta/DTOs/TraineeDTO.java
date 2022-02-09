@@ -1,6 +1,6 @@
 package org.sparta.DTOs;
 
-import org.sparta.POJOs.TraineePojo;
+import org.sparta.POJOs.TraineePojos.TraineePojo;
 
 import java.time.LocalDate;
 
