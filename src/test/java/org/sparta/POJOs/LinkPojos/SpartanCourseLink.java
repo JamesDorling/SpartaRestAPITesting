@@ -2,7 +2,7 @@ package org.sparta.POJOs.LinkPojos;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class Course{
+public class SpartanCourseLink {
 
 	@JsonProperty("href")
 	private String href;
