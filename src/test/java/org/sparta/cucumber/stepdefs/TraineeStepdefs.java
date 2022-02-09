@@ -1,6 +1,7 @@
 package org.sparta.cucumber.stepdefs;
 
 import io.cucumber.java.en.And;
+import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.junit.jupiter.api.Assertions;
 import org.sparta.DTOs.DTOEnum;
@@ -9,21 +10,22 @@ import org.sparta.DTOs.TraineeDTOList;
 import org.sparta.crud_forms.TraineeForm;
 import org.sparta.framework.connection.ConnectionManager;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.sparta.framework.Injector.injectDTO;
-import static org.sparta.framework.connection.ConnectionManager.makeUrl;
-import static org.sparta.framework.connection.ConnectionManager.sendTraineePostRequest;
+import static org.sparta.framework.connection.ConnectionManager.*;
 
 public class TraineeStepdefs {
 
     static TraineeDTOList traineeDTOList = (TraineeDTOList) injectDTO(ConnectionManager.makeUrl().spartan().link(), DTOEnum.TRAINEE_LIST);
     static List<TraineeDTO> traineeList = traineeDTOList.getEmbedded().getSpartanEntityList();
 
-    private String firstName;
-    private String lastName;
-    private int courseId;
-    private String startDate;
+    private static String firstName;
+    private static String lastName;
+    private static int courseId;
+    private static String startDate;
 
 
     @When("I enter first name {string}")
@@ -48,23 +50,45 @@ public class TraineeStepdefs {
 
     @And("I send a POST request")
     public void iSendAPOSTRequest() {
+        TraineeForm newTrainee = new TraineeForm(firstName, lastName, courseId, startDate);
+        System.out.println("Generated trainee form: " + newTrainee.getJson());
+        sendTraineePostRequest(newTrainee.getJson(), makeUrl().getSpartanWithKey());
+    }
+
+    @Then("A trainee should be created with the name {string} {string}, a course ID of {int}, a start date of {string}, and an end date of {string}")
+    public void aTraineeShouldBeCreatedWithTheNameACourseIDOfAStartDateOfAndAnEndDateOf(String arg0, String arg1, int arg2, String arg3, String arg4) {
+
+        TraineeDTOList traineeDTOList = (TraineeDTOList) injectDTO(ConnectionManager.makeUrl().spartan().link(), DTOEnum.TRAINEE_LIST);
+        traineeList = traineeDTOList.getEmbedded().getSpartanEntityList();
+
+        ArrayList<String> expected = new ArrayList<>();
+        expected.add(arg0);
+        expected.add(arg1);
+        expected.add(String.valueOf(arg2));
+        expected.add(arg3);
+        expected.add(arg4);
+
+        System.out.println("Expected Array: " + expected);
+
+        ArrayList<String> received = new ArrayList<>();
+        received.add(traineeList.get(traineeList.size()-1).getFirstName());
+        received.add(traineeList.get(traineeList.size()-1).getLastName());
+        received.add(String.valueOf(traineeList.get(traineeList.size()-1).getCourseId()));
+        received.add(traineeList.get(traineeList.size()-1).getCourseStartDate());
+        received.add(traineeList.get(traineeList.size()-1).getCourseEndDate());
+
+        System.out.println("Received array: " + received);
+
+        for (int i = 0; i < expected.size(); i++) {
+            Assertions.assertEquals(received.get(i), expected.get(i));
+        }
 
     }
 
-    public static void main(String[] args) {
-        System.out.println(traineeList.get(traineeList.size()-1).getTraineeAsJson());
-        TraineeForm newTrainee = new TraineeForm("Callum", "DK", 1, "2022-01-01");
-        System.out.println(newTrainee.getJson());
-
-        //ConnectionManager.sendTraineePostRequest(newTrainee.getJson(), ConnectionManager.makeUrl().spartan().link()).body();
-        System.out.println(sendTraineePostRequest(newTrainee.getJson(), makeUrl().spartan().link()).body());
-
-
-        TraineeDTOList traineeDTOList = (TraineeDTOList) injectDTO(ConnectionManager.makeUrl().spartan().link(), DTOEnum.TRAINEE_LIST);
-        System.out.println(newTrainee.getJson());
-        traineeList = traineeDTOList.getEmbedded().getSpartanEntityList();
-        System.out.println(traineeList.get(traineeList.size()-1).getTraineeAsJson());
-        Assertions.assertEquals("james", traineeList.get(traineeList.size()-1).getFirstName());
-
+    @And("I send a PUT request")
+    public void iSendAPUTRequest() {
+        TraineeForm newTrainee = new TraineeForm(firstName, lastName, courseId, startDate);
+        System.out.println("Generated trainee form: " + newTrainee.getJson());
+        sendTraineePutRequest(newTrainee.getJson(), makeUrl().getSpartanWithKey());
     }
 }
