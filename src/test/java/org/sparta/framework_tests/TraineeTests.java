@@ -3,22 +3,20 @@ package org.sparta.framework_tests;
 import org.sparta.DTOs.DTOEnum;
 import org.sparta.DTOs.TraineeDTO;
 import org.sparta.DTOs.TraineeDTOList;
-import org.sparta.POJOs.Id;
 import org.junit.jupiter.api.*;
-import org.sparta.POJOs.SpartanEmbedded;
-import org.sparta.crud_forms.TraineeForm;
+import org.sparta.crud_forms.AddTraineeForm;
+import org.sparta.crud_forms.UpdateTraineeForm;
 import org.sparta.framework.connection.ConnectionManager;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.sparta.framework.connection.ConnectionManager.*;
 import static org.sparta.framework.Injector.*;
 
 public class TraineeTests {
-    List<TraineeDTO> traineeList;
+    private List<TraineeDTO> traineeList;
+    private final boolean editDatabase = true; //Temporary boolean so I do not add an employee called "dames" every time I run tests
 
     @BeforeEach
     void init() {
@@ -109,11 +107,11 @@ public class TraineeTests {
     class TraineePojoTests {
         @Test
         @DisplayName("First Name is Correct Test")
-        void firstNameTest() {Assertions.assertEquals("Macias", traineeList.get(0).getFirstName());}
+        void firstNameTest() {Assertions.assertEquals("Hendrix", traineeList.get(0).getFirstName());}
 
         @Test
         @DisplayName("Last Name is Correct Test")
-        void lastNameTest() {Assertions.assertEquals("Monroe", traineeList.get(0).getLastName());}
+        void lastNameTest() {Assertions.assertEquals("Gardner", traineeList.get(0).getLastName());}
 
         @Test
         @DisplayName("Course Start Date is Correct")
@@ -121,15 +119,15 @@ public class TraineeTests {
 
         @Test
         @DisplayName("Course End Date is Correct")
-        void courseEndDateIsCorrect() {Assertions.assertEquals("2022-03-15", traineeList.get(0).getCourseEndDate());}
+        void courseEndDateIsCorrect() {Assertions.assertEquals("2022-04-15", traineeList.get(0).getCourseEndDate());}
 
         @Test
         @DisplayName("Course ID is Correct")
-        void courseIdIsCorrectTest() {Assertions.assertEquals(6, traineeList.get(0).getCourseId());}
+        void courseIdIsCorrectTest() {Assertions.assertEquals(3, traineeList.get(0).getCourseId());}
 
         @Test
         @DisplayName("Trainee ID is Correct")
-        void traineeIdIsCorrectTest() {Assertions.assertEquals("6202722fc96c0d99e85b30c2", traineeList.get(0).getId());}
+        void traineeIdIsCorrectTest() {Assertions.assertEquals("6203a427147baa0d50338b6f", traineeList.get(0).getId());}
     }
 
     @Nested
@@ -138,20 +136,22 @@ public class TraineeTests {
         @Test
         @DisplayName("Posting a trainee")
         void postingATraineeTest() {
-            TraineeForm newTrainee = new TraineeForm("dames", "borling", 5, "2023-02-05");
+            Assumptions.assumeTrue(editDatabase);
+            AddTraineeForm newTrainee = new AddTraineeForm("dames", "borling", 5, "2023-02-05");
             sendTraineePostRequest(newTrainee.getJson(), makeUrl().getSpartanWithKey());
             System.out.println(makeUrl().spartan().getSpartanWithKey());
 
             TraineeDTOList traineeDTOList = (TraineeDTOList) injectDTO(ConnectionManager.makeUrl().spartan().link(), DTOEnum.TRAINEE_LIST);
             traineeList = traineeDTOList.getEmbedded().getSpartanEntityList();
-            Assertions.assertEquals("james", traineeList.get(traineeList.size()-1).getFirstName());
+            Assertions.assertEquals("dames", traineeList.get(traineeList.size()-1).getFirstName());
         }
 
         @Test
         @DisplayName("Putting a trainee")
         void puttingATrainee() {
-            TraineeForm newTrainee = new TraineeForm("james", "dorling", 2, "2023-01-01");
-            sendTraineePutRequest(newTrainee.getJson(), makeUrl().getSpartanWithKey());
+            Assumptions.assumeTrue(editDatabase);
+            UpdateTraineeForm updateTrainee = new UpdateTraineeForm("6203af8f51765e2883463d96","james", "dorling", 2, "2023-01-01");
+            sendTraineePutRequest(updateTrainee.getJson(), makeUrl().getSpartanWithKey());
 
             TraineeDTOList traineeDTOList = (TraineeDTOList) injectDTO(ConnectionManager.makeUrl().spartan().link(), DTOEnum.TRAINEE_LIST);
             traineeList = traineeDTOList.getEmbedded().getSpartanEntityList();
