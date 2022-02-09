@@ -1,6 +1,7 @@
-package org.sparta.POJOs;
+package org.sparta.POJOs.TraineePojos;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.sparta.POJOs.LinkPojos.Links;
 
 public class TraineePojo{
 

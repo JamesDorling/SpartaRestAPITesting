@@ -7,6 +7,7 @@ import org.junit.jupiter.api.*;
 import org.sparta.crud_forms.AddTraineeForm;
 import org.sparta.crud_forms.UpdateTraineeForm;
 import org.sparta.framework.connection.ConnectionManager;
+import org.sparta.framework.connection.UrlBuilder;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -17,11 +18,12 @@ import static org.sparta.framework.Injector.*;
 @TestMethodOrder(value = MethodOrderer.OrderAnnotation.class)
 public class TraineeTests {
     private TraineeDTO trainee;
+    private static final String idToTest = "6203d4a251765e2883463d9b";
     private final boolean editDatabase = false; //Temporary boolean so I do not add an employee called "dames" every time I run tests
 
     @BeforeEach
     void init() {
-        trainee = (TraineeDTO) injectDTO(ConnectionManager.makeUrl().getSpecificSpartan("6203af8f51765e2883463d96"), DTOEnum.TRAINEE);
+        trainee = (TraineeDTO) injectDTO(ConnectionManager.makeUrl().getSpecificSpartan(idToTest), DTOEnum.TRAINEE);
     }
 
     @Nested
@@ -129,7 +131,7 @@ public class TraineeTests {
 
         @Test
         @DisplayName("Trainee ID is Correct")
-        void traineeIdIsCorrectTest() {Assertions.assertEquals("6203af8f51765e2883463d96", trainee.getId());}
+        void traineeIdIsCorrectTest() {Assertions.assertEquals(idToTest, trainee.getId());}
     }
 
     @Nested
@@ -156,27 +158,33 @@ public class TraineeTests {
         }
 
         @Test
-        @DisplayName("Putting a trainee")
+        @DisplayName("Editing a trainee")
         void puttingATrainee() {
             Assumptions.assumeTrue(editDatabase);
-            UpdateTraineeForm updateTrainee = new UpdateTraineeForm("6203af8f51765e2883463d96","james", "dorling", 2, "2023-01-01");
+            UpdateTraineeForm updateTrainee = new UpdateTraineeForm(trainee.getId(), "james", "dorling", 2, "2023-01-01");
             sendTraineePutRequest(updateTrainee.getJson(), makeUrl().getSpartanWithKey());
 
-            TraineeDTO editedTrainee = (TraineeDTO) injectDTO(ConnectionManager.makeUrl().getSpecificSpartan("6203af8f51765e2883463d96"), DTOEnum.TRAINEE);
+            TraineeDTO editedTrainee = (TraineeDTO) injectDTO(ConnectionManager.makeUrl().getSpecificSpartan(trainee.getId()), DTOEnum.TRAINEE);
             Assertions.assertEquals(2, editedTrainee.getCourseId());
+        }
+
+        @Test
+        @DisplayName("Is the generated end date correct")
+        void isTheGeneratedEndDateCorrect() {
+            Assertions.assertEquals(trainee.getStartDateAsDate().plusWeeks(8), trainee.getEndDateAsDate());
         }
 
         @Test
         @DisplayName("Searching for a spartan by first name")
         void searchingForASpartanByFirstNameTest() {
             TraineeDTOList traineeDTOList = (TraineeDTOList) injectDTO(ConnectionManager.makeUrl().spartan().firstName("james").link(), DTOEnum.TRAINEE_LIST);
-            Assertions.assertEquals(traineeDTOList.getEmbedded().getSpartanEntityList().get(0).getFirstName(), "james");
+            Assertions.assertEquals(traineeDTOList.getEmbedded().getSpartanEntityList().get(0).getFirstName().toLowerCase(), "james");
         }
 
         @Test
         @DisplayName("Searching for a spartan by last name")
         void searchingForASpartanByLastName() {
-            TraineeDTOList traineeDTOList = (TraineeDTOList) injectDTO(ConnectionManager.makeUrl().spartan().lastName("james").link(), DTOEnum.TRAINEE_LIST);
+            TraineeDTOList traineeDTOList = (TraineeDTOList) injectDTO(ConnectionManager.makeUrl().spartan().lastName("dorling").link(), DTOEnum.TRAINEE_LIST);
             Assertions.assertEquals(traineeDTOList.getEmbedded().getSpartanEntityList().get(0).getLastName(), "dorling");
         }
 
