@@ -77,11 +77,5 @@ public class ConnectionManagerTests {
         void specificCourseTest() {
             Assertions.assertEquals("http://localhost:8080/courses/3" , ConnectionManager.makeUrl().getSpecificCourse(3));
         }
-
-        @Test
-        @DisplayName("apikey test")
-        void apiKeyTest() {
-            Assertions.assertEquals("http://localhost:8080key", ConnectionManager.makeUrl().apiKey().link());
-        }
     }
 }
