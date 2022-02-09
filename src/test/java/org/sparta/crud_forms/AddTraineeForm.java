@@ -1,8 +1,8 @@
 package org.sparta.crud_forms;
 
-public class TraineeForm {
+public class AddTraineeForm {
     private static String traineeJson;
-    public TraineeForm(String firstName, String lastName, Integer courseId, String startDate) {
+    public AddTraineeForm(String firstName, String lastName, Integer courseId, String startDate) {
         traineeJson = "{\"firstName\":\""+ firstName +"\"," +
                 "\"lastName\":\""+ lastName +"\"," +
                 "\"courseId\":"+ courseId +"," +
