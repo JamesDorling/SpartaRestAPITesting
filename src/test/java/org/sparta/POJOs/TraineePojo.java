@@ -4,14 +4,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class TraineePojo{
 
+	@JsonProperty("firstName")
+	private String firstName;
+
 	@JsonProperty("lastName")
 	private String lastName;
 
-	@JsonProperty("courseId")
-	private Integer courseId;
-
-	@JsonProperty("firstname")
-	private String firstname;
+	@JsonProperty("_links")
+	private Links links;
 
 	@JsonProperty("id")
 	private String id;
@@ -22,16 +22,19 @@ public class TraineePojo{
 	@JsonProperty("courseStartDate")
 	private String courseStartDate;
 
+	@JsonProperty("courseId")
+	private Integer courseId;
+
+	public String getFirstName(){
+		return firstName;
+	}
+
 	public String getLastName(){
 		return lastName;
 	}
 
-	public Integer getCourseId(){
-		return courseId;
-	}
-
-	public String getFirstName(){
-		return firstname;
+	public Links getLinks(){
+		return links;
 	}
 
 	public String getId(){
@@ -46,26 +49,21 @@ public class TraineePojo{
 		return courseStartDate;
 	}
 
+	public Integer getCourseId(){
+		return courseId;
+	}
+
 	@Override
  	public String toString(){
 		return 
 			"TraineePojo{" + 
-			"lastName = '" + lastName + '\'' + 
-			",course_id = '" + courseId + '\'' + 
-			",firstname = '" + firstname + '\'' + 
-			",_id = '" + id + '\'' + 
+			"firstName = '" + firstName + '\'' + 
+			",lastName = '" + lastName + '\'' + 
+			",_links = '" + links + '\'' + 
+			",id = '" + id + '\'' + 
 			",courseEndDate = '" + courseEndDate + '\'' + 
 			",courseStartDate = '" + courseStartDate + '\'' + 
+			",courseId = '" + courseId + '\'' + 
 			"}";
 		}
-
-	public TraineePojo() {
-	}
-
-	public TraineePojo(String firstName, String lastName, Integer courseId, String courseStartDate) {
-		this.firstname = firstName;
-		this.lastName = lastName;
-		this.courseId = courseId;
-		this.courseStartDate = courseStartDate;
-	}
 }

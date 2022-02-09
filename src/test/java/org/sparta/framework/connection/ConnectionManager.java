@@ -37,9 +37,18 @@ public class ConnectionManager {
         return getResponse(url).statusCode();
     }
 
+
+    private static HttpResponse<String> getResponse(String url) {
+        return receiveResponse(url);
+    }
+
     private static HttpResponse<String> getResponse() {
+        return receiveResponse(BASEURL + "/spartans");
+    }
+
+    private static HttpResponse<String> receiveResponse(String url) {
         HttpClient httpClient = HttpClient.newHttpClient();
-        HttpRequest httpRequest = HttpRequest.newBuilder().uri(URI.create(BASEURL + "/spartans")).build();
+        HttpRequest httpRequest = HttpRequest.newBuilder().uri(URI.create(url)).build();
         HttpResponse<String> httpResponse = null;
         try {
             httpResponse = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
@@ -54,7 +63,7 @@ public class ConnectionManager {
     public static HttpResponse<String> sendTraineePostRequest(String newTraineeJson, String url) {
         HttpClient httpClient = HttpClient.newHttpClient();
         HttpRequest httpRequest = HttpRequest.newBuilder().uri(URI.create(url)).POST(HttpRequest.BodyPublishers
-                        .ofString(newTraineeJson)).build();
+                        .ofString(newTraineeJson)).header("Content-Type", "application/json").build();
         HttpResponse<String> httpResponse = null;
         try {
             httpResponse = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
