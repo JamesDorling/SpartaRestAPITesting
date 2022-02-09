@@ -138,22 +138,22 @@ public class TraineeTests {
         @Test
         @DisplayName("Posting a trainee")
         void postingATraineeTest() {
-            System.out.println(traineeList.get(traineeList.size()-1).getTraineeAsJson());
-            TraineeForm newTrainee = new TraineeForm("james", "dorling", 1, "2023-01-01");
-            System.out.println(sendTraineePostRequest(newTrainee.getJson(), makeUrl().spartan().link()).body());
-
-
+            System.out.println(sendTraineePostRequest(new TraineeForm("james", "dorling", 1, "2023-01-01").getJson(), makeUrl().spartan().link()).statusCode());
 
             TraineeDTOList traineeDTOList = (TraineeDTOList) injectDTO(ConnectionManager.makeUrl().spartan().link(), DTOEnum.TRAINEE_LIST);
-            System.out.println(newTrainee.getJson());
             traineeList = traineeDTOList.getEmbedded().getSpartanEntityList();
-            System.out.println(traineeList.get(traineeList.size()-1).getTraineeAsJson());
             Assertions.assertEquals("james", traineeList.get(traineeList.size()-1).getFirstName());
         }
 
         @Test
         @DisplayName("Putting a trainee")
         void puttingATrainee() {
+
+        }
+
+        @Test
+        @DisplayName("Searching for a spartan by firstname")
+        void searchForSpartanByName() {
 
         }
     }
