@@ -35,8 +35,14 @@ public class CourseTests {
     }
 
     @Nested
-    @DisplayName("CourseDTO Tests")
+    @DisplayName("Checking injecting data to a DTO")
     class CourseDTOTests {
+
+        @Test
+        @DisplayName("Object Id is not Null")
+        void objectIdIsNotNull(){
+            Assertions.assertTrue(firstCourse.idIsNotNull());
+        }
 
         @Test
         @DisplayName("Course Id is not Null")
@@ -70,7 +76,7 @@ public class CourseTests {
     }
 
     @Nested
-    @DisplayName("CoursePOJO Tests")
+    @DisplayName("Do we get expected values from get requests?")
     class CoursePOJOTests {
 
         @Test
@@ -78,6 +84,10 @@ public class CourseTests {
         void connectionCode200Test() {
             Assertions.assertEquals(200, getStatusCode(allCoursesURL));
         }
+
+        @Test
+        @DisplayName("Object id is retrievable")
+        void getObjectIDTest(){Assertions.assertEquals("6201338cb76917a6dcd28f15", devOpsCourse.getId());}
 
         @Test
         @DisplayName("Course name is retrievable")

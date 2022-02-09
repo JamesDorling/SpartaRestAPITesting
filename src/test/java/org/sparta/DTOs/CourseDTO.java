@@ -4,6 +4,7 @@ import org.sparta.POJOs.CoursePojo;
 
 public class CourseDTO extends CoursePojo implements DTO {
 
+    public boolean idIsNotNull() {return getId() != null;}
     public boolean courseIdIsNotNull() {return getCourseId() != null;}
     public boolean courseNameIsNotNull() {return getCourseName() != null;}
     public boolean lengthIsNotNull() {return getLength() != null;}
