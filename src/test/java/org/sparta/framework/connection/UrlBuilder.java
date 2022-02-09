@@ -88,6 +88,10 @@ public class UrlBuilder {
         return link.append("/courses/").append(id).toString();
     }
 
+    public String deleteSpartan(String id) {
+        return link.append("/spartans/").append(id).append("/").append(Config.getApiKey()).toString();
+    }
+
     public String getAllActiveCourses() {
         return link.append("/courses/isActive").toString();
     }
