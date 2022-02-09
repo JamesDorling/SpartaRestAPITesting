@@ -49,7 +49,7 @@ public class ConnectionManager {
     public static HttpResponse<String> sendTraineePostRequest(String newTraineeJson, String url) {
         HttpClient httpClient = HttpClient.newHttpClient();
         HttpRequest httpRequest = HttpRequest.newBuilder().uri(URI.create(url)).POST(HttpRequest.BodyPublishers
-                        .ofString(newTraineeJson)).build();
+                        .ofString(newTraineeJson)).header("Content-Type", "application/json").build();
         HttpResponse<String> httpResponse = null;
         try {
             httpResponse = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
