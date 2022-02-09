@@ -7,7 +7,8 @@ import org.junit.jupiter.api.Assertions;
 import org.sparta.DTOs.DTOEnum;
 import org.sparta.DTOs.TraineeDTO;
 import org.sparta.DTOs.TraineeDTOList;
-import org.sparta.crud_forms.TraineeForm;
+import org.sparta.crud_forms.AddTraineeForm;
+import org.sparta.crud_forms.UpdateTraineeForm;
 import org.sparta.framework.connection.ConnectionManager;
 
 import java.util.ArrayList;
@@ -50,7 +51,7 @@ public class TraineeStepdefs {
 
     @And("I send a POST request")
     public void iSendAPOSTRequest() {
-        TraineeForm newTrainee = new TraineeForm(firstName, lastName, courseId, startDate);
+        AddTraineeForm newTrainee = new AddTraineeForm(firstName, lastName, courseId, startDate);
         System.out.println("Generated trainee form: " + newTrainee.getJson());
         sendTraineePostRequest(newTrainee.getJson(), makeUrl().getSpartanWithKey());
     }
@@ -87,8 +88,37 @@ public class TraineeStepdefs {
 
     @And("I send a PUT request")
     public void iSendAPUTRequest() {
-        TraineeForm newTrainee = new TraineeForm(firstName, lastName, courseId, startDate);
+        UpdateTraineeForm newTrainee = new UpdateTraineeForm("6203d4425a7a6c0b58931ba5", firstName, lastName, courseId, startDate);
         System.out.println("Generated trainee form: " + newTrainee.getJson());
         sendTraineePutRequest(newTrainee.getJson(), makeUrl().getSpartanWithKey());
+    }
+
+
+    @Then("The trainee should be updated to have the name {string} {string}, a course ID of {int}, a start date of {string}, and an end date of {string}")
+    public void theTraineeShouldBeUpdatedToHaveTheNameACourseIDOfAStartDateOfAndAnEndDateOf(String arg0, String arg1, int arg2, String arg3, String arg4) {
+
+        TraineeDTO trainee = (TraineeDTO) injectDTO(ConnectionManager.makeUrl().getSpecificSpartan("6203d4425a7a6c0b58931ba5"), DTOEnum.TRAINEE);
+
+        ArrayList<String> expected = new ArrayList<>();
+        expected.add(arg0);
+        expected.add(arg1);
+        expected.add(String.valueOf(arg2));
+        expected.add(arg3);
+        expected.add(arg4);
+
+        System.out.println("Expected Array: " + expected);
+
+        ArrayList<String> received = new ArrayList<>();
+        received.add(trainee.getFirstName());
+        received.add(trainee.getLastName());
+        received.add(String.valueOf(trainee.getCourseId()));
+        received.add(trainee.getCourseStartDate());
+        received.add(trainee.getCourseEndDate());
+
+        System.out.println("Received array: " + received);
+
+        for (int i = 0; i < expected.size(); i++) {
+            Assertions.assertEquals(received.get(i), expected.get(i));
+        }
     }
 }

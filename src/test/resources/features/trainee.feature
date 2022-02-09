@@ -16,4 +16,4 @@ Feature: Testing the CRUD operations for trainees
         And I enter start date of "2022-03-03"
         And I send a PUT request
 
-        Then The trainee should be updated to have the name {string} {string}, a course ID of {int} a start date of {string}, and an end date of {string}
+        Then The trainee should be updated to have the name "Thomas" "Anderson", a course ID of 2, a start date of "2022-03-03", and an end date of "2022-04-28"
