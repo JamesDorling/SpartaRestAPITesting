@@ -1,6 +1,6 @@
 package org.sparta.DTOs;
 
-import org.sparta.POJOs.TraineePojoList;
+import org.sparta.POJOs.TraineePojos.TraineePojoList;
 
 public class TraineeDTOList extends TraineePojoList implements DTO{
 }
