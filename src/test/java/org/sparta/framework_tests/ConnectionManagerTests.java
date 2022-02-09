@@ -8,7 +8,6 @@ import org.sparta.framework.connection.ConnectionManager;
 import org.sparta.framework.connection.UrlBuilder;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 public class ConnectionManagerTests {
     @Nested
@@ -46,13 +45,13 @@ public class ConnectionManagerTests {
         @Test
         @DisplayName("course test")
         void courseTest() {
-           Assertions.assertEquals("http://localhost:8080/courses?" , ConnectionManager.makeUrl().course().link());
+           Assertions.assertEquals("http://localhost:8080/courses?", ConnectionManager.makeUrl().course().link());
         }
 
         @Test
         @DisplayName("date test")
         void dateTest() {
-            Assertions.assertEquals("http://localhost:8080/spartans?date=2022-02-10&BeforeAfter=BeforeStartEnd=End" , ConnectionManager.makeUrl().spartan().date(LocalDate.of(2022, 2, 10).toString()).BeforeAfter(UrlBuilder.TimeParameters.BEFORE).StartEnd(UrlBuilder.TimeParameters.END).link());
+            Assertions.assertEquals("http://localhost:8080/spartans?date=2022-02-10&BeforeAfter=BeforeStartEnd=End" , ConnectionManager.makeUrl().spartan().date(LocalDate.of(2022, 2, 10).toString()).BeforeAfter(ConnectionManager.UrlBuilder.TimeParameters.BEFORE).StartEnd(ConnectionManager.UrlBuilder.TimeParameters.END).link());
         }
 
         @Test
@@ -79,5 +78,11 @@ public class ConnectionManagerTests {
         void specificCourseTest() {
             Assertions.assertEquals("http://localhost:8080/courses/3" , ConnectionManager.makeUrl().getSpecificCourse(3));
         }
+
+//        @Test
+//        @DisplayName("apikey test")
+//        void apiKeyTest() {
+//            Assertions.assertEquals("http://localhost:8080key", ConnectionManager.makeUrl().apiKey().link());
+//        }
     }
 }

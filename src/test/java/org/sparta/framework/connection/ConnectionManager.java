@@ -80,4 +80,110 @@ public class ConnectionManager {
         }
         return httpResponse;
     }
+<<<<<<< HEAD
+=======
+
+    public static class UrlBuilder {
+        private final StringBuilder link;
+
+        public UrlBuilder(String link) {this.link = new StringBuilder(link);}
+
+        public UrlBuilder spartan() {
+            link.append("/spartans?");
+            return this;
+        }
+
+        public UrlBuilder course() {
+            link.append("/courses?");
+            return this;
+        }
+
+        public UrlBuilder firstName(String name) {
+            link.append("firstName=").append(name).append("&");
+            return this;
+        }
+
+        public UrlBuilder lastName(String name) {
+            link.append("lastName=").append(name).append("&");
+            return this;
+        }
+
+        public UrlBuilder courseId(Integer id) {
+            link.append("courseId=").append(id).append("&");
+            return this;
+        }
+
+        public UrlBuilder date(String date) {
+            link.append("date=").append(date).append("&");
+            return this;
+        }
+
+        public UrlBuilder courseName(String course) {
+            link.append("courseName=").append(course).append("&");
+            return this;
+        }
+
+        public UrlBuilder length(String length) {
+            link.append("length=").append(length).append("&");
+            return this;
+        }
+
+        public UrlBuilder BeforeAfter(TimeParameters parameter) {
+            link.append("BeforeAfter=");
+            switch (parameter) {
+                case BEFORE -> link.append("Before");
+                case AFTER -> link.append("After");
+                case NOW -> link.append("Now");
+                default -> throw new IllegalStateException("Unexpected value (Time Parameter): " + parameter.name());
+            }
+            return this;
+        }
+
+        public UrlBuilder StartEnd(TimeParameters parameter) {
+            link.append("StartEnd=");
+            switch (parameter) {
+                case START -> link.append("Start");
+                case END -> link.append("End");
+                default -> throw new IllegalStateException("Unexpected value (Time Parameter): " + parameter.name());
+            }
+            return this;
+        }
+
+        public String getSpartanWithKey() {
+            return link.append("/spartans/").append(Config.getApiKey()).toString();
+        }
+
+        public String getCourseWithKey() {
+            return link.append("/courses/").append(Config.getApiKey()).toString();
+        }
+
+        public String getSpecificSpartan(String id) {
+            return link.append("/spartans/").append(id).toString();
+        }
+
+        public String getSpecificCourse(Integer id) {
+            return link.append("/courses/").append(id).toString();
+        }
+
+        public String getAllActiveCourses() {
+            return link.append("/courses/isActive").toString();
+        }
+
+        public String getAllInactiveCourses() {
+            return link.append("/courses/nonActive").toString();
+        }
+
+        public String link() { //Trailing & is fine, still works
+            return link.toString();
+        }
+
+        public enum TimeParameters {
+            BEFORE,
+            NOW,
+            AFTER,
+            START,
+            END
+        }
+    }
+>>>>>>> dev
 }

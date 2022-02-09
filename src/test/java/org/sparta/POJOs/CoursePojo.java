@@ -1,8 +1,13 @@
 package org.sparta.POJOs;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class CoursePojo{
+
+	@JsonProperty("id")
+	private String id;
 
 	@JsonProperty("courseId")
 	private Integer courseId;
@@ -18,6 +23,14 @@ public class CoursePojo{
 
 	@JsonProperty("active")
 	private Boolean active;
+
+	// !Links not implemented further!
+	@JsonProperty("_links")
+	private Object links;
+
+	public String getId() {
+		return id;
+	}
 
 	public Integer getCourseId(){
 		return courseId;
@@ -42,8 +55,9 @@ public class CoursePojo{
 	@Override
  	public String toString(){
 		return 
-			"CoursePojo{" + 
-			"course_id = '" + courseId + '\'' + 
+			"CoursePojo{" +
+					"id = '" + id + '\'' +
+					"course_id = '" + courseId + '\'' +
 			",course_name = '" + courseName + '\'' + 
 			",length = '" + length + '\'' + 
 			",description = '" + description + '\'' +
