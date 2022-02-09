@@ -11,8 +11,9 @@ import org.sparta.crud_forms.AddTraineeForm;
 import org.sparta.crud_forms.UpdateTraineeForm;
 import org.sparta.framework.connection.ConnectionManager;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.sparta.framework.Injector.injectDTO;
@@ -23,10 +24,12 @@ public class TraineeStepdefs {
     static TraineeDTOList traineeDTOList = (TraineeDTOList) injectDTO(ConnectionManager.makeUrl().spartan().link(), DTOEnum.TRAINEE_LIST);
     static List<TraineeDTO> traineeList = traineeDTOList.getEmbedded().getSpartanEntityList();
 
-    private static String firstName;
-    private static String lastName;
-    private static int courseId;
-    private static String startDate;
+    private String firstName;
+    private String lastName;
+    private int courseId;
+    private String startDate;
+    private String endDate;
+    private LocalDate dateQuery;
 
 
     @When("I enter first name {string}")
@@ -119,6 +122,55 @@ public class TraineeStepdefs {
 
         for (int i = 0; i < expected.size(); i++) {
             Assertions.assertEquals(received.get(i), expected.get(i));
+        }
+    }
+
+    @When("I search for first name {string}")
+    public void iSearchForFirstName(String arg0) {
+        firstName = arg0;
+    }
+
+
+    @Then("I should receive all trainees whose first name contains that")
+    public void iShouldReceiveATraineeWithFirstNameOf() {
+        TraineeDTOList traineeDTOList = (TraineeDTOList) injectDTO(ConnectionManager.makeUrl().spartan().firstName(firstName).link(), DTOEnum.TRAINEE_LIST);
+        for (TraineeDTO trainee : traineeDTOList.getEmbedded().getSpartanEntityList()) {
+            Assertions.assertEquals(trainee.getFirstName(), firstName);
+        }
+    }
+
+    @When("I search for last name {string}")
+    public void iSearchForLastName(String arg0) {
+        lastName = arg0;
+    }
+
+    @Then("I should receive all trainees whose last name contains that")
+    public void iShouldReceiveATraineeWithTheLastNameOf() {
+        TraineeDTOList traineeDTOList = (TraineeDTOList) injectDTO(ConnectionManager.makeUrl().spartan().firstName(firstName).link(), DTOEnum.TRAINEE_LIST);
+        for (TraineeDTO trainee : traineeDTOList.getEmbedded().getSpartanEntityList()) {
+            Assertions.assertEquals(trainee.getLastName(), lastName);
+        }
+    }
+
+
+    @When("I search before date {string}")
+    public void iSearchBeforeDate(String arg0) {
+        try {
+            dateQuery = LocalDate.parse(arg0);
+        } catch (DateTimeParseException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    @Then("I should receive all trainees that started before that date")
+    public void iShouldReceiveAllTraineesThatStartedBeforeThatDate() {
+        TraineeDTOList traineeDTOList = (TraineeDTOList) injectDTO(ConnectionManager.makeUrl().spartan().BeforeAfter(UrlBuilder.TimeParameters.BEFORE).StartEnd(UrlBuilder.TimeParameters.START).date(dateQuery.toString()).link(), DTOEnum.TRAINEE_LIST);
+        System.out.println("Trainees started before " + dateQuery + ":");
+
+        for (TraineeDTO trainee : traineeDTOList.getEmbedded().getSpartanEntityList()) {
+            Assertions.assertTrue(trainee.getStartDateAsDate().isBefore(dateQuery));
+            System.out.print(trainee.getFullName() + ", ");
         }
     }
 }
