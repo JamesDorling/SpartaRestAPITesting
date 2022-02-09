@@ -1,5 +1,6 @@
 package org.sparta.framework.connection;
 
+import org.sparta.DTOs.TraineeDTO;
 import org.sparta.config.Config;
 import org.sparta.framework.logging.LogManager;
 
@@ -49,9 +50,11 @@ public class ConnectionManager {
         return httpResponse;
     }
 
-    private static HttpResponse<String> getResponse(String url) {
+
+    public static HttpResponse<String> sendTraineePostRequest(String newTraineeJson, String url) {
         HttpClient httpClient = HttpClient.newHttpClient();
-        HttpRequest httpRequest = HttpRequest.newBuilder().uri(URI.create(url)).build();
+        HttpRequest httpRequest = HttpRequest.newBuilder().uri(URI.create(url)).POST(HttpRequest.BodyPublishers
+                        .ofString(newTraineeJson)).build();
         HttpResponse<String> httpResponse = null;
         try {
             httpResponse = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());

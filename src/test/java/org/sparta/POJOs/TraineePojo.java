@@ -58,4 +58,14 @@ public class TraineePojo{
 			",courseStartDate = '" + courseStartDate + '\'' + 
 			"}";
 		}
+
+	public TraineePojo() {
+	}
+
+	public TraineePojo(String firstName, String lastName, Integer courseId, String courseStartDate) {
+		this.firstname = firstName;
+		this.lastName = lastName;
+		this.courseId = courseId;
+		this.courseStartDate = courseStartDate;
+	}
 }
