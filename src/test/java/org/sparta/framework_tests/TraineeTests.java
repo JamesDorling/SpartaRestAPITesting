@@ -138,23 +138,31 @@ public class TraineeTests {
         @Test
         @DisplayName("Posting a trainee")
         void postingATraineeTest() {
-            System.out.println(traineeList.get(traineeList.size()-1).getTraineeAsJson());
-            TraineeForm newTrainee = new TraineeForm("james", "dorling", 1, "2023-01-01");
-            System.out.println(sendTraineePostRequest(newTrainee.getJson(), makeUrl().spartan().link()).body());
-
-
+            TraineeForm newTrainee = new TraineeForm("dames", "borling", 5, "2023-02-05");
+            sendTraineePostRequest(newTrainee.getJson(), makeUrl().getSpartanWithKey());
+            System.out.println(makeUrl().spartan().getSpartanWithKey());
 
             TraineeDTOList traineeDTOList = (TraineeDTOList) injectDTO(ConnectionManager.makeUrl().spartan().link(), DTOEnum.TRAINEE_LIST);
-            System.out.println(newTrainee.getJson());
             traineeList = traineeDTOList.getEmbedded().getSpartanEntityList();
-            System.out.println(traineeList.get(traineeList.size()-1).getTraineeAsJson());
             Assertions.assertEquals("james", traineeList.get(traineeList.size()-1).getFirstName());
         }
 
         @Test
         @DisplayName("Putting a trainee")
         void puttingATrainee() {
+            TraineeForm newTrainee = new TraineeForm("james", "dorling", 2, "2023-01-01");
+            sendTraineePutRequest(newTrainee.getJson(), makeUrl().getSpartanWithKey());
 
+            TraineeDTOList traineeDTOList = (TraineeDTOList) injectDTO(ConnectionManager.makeUrl().spartan().link(), DTOEnum.TRAINEE_LIST);
+            traineeList = traineeDTOList.getEmbedded().getSpartanEntityList();
+            Assertions.assertEquals(2, traineeList.get(traineeList.size()-1).getCourseId());
+        }
+
+        @Test
+        @DisplayName("Searching for a spartan by name")
+        void searchingForASpartanByNameTest() {
+            TraineeDTOList traineeDTOList = (TraineeDTOList) injectDTO(ConnectionManager.makeUrl().spartan().firstName("james").link(), DTOEnum.TRAINEE_LIST);
+            Assertions.assertEquals(traineeDTOList.getEmbedded().getSpartanEntityList().get(0).getFirstName(), "james");
         }
     }
 

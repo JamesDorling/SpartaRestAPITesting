@@ -61,12 +61,22 @@ public class ConnectionManager {
 
 
     public static HttpResponse<String> sendTraineePostRequest(String newTraineeJson, String url) {
-        HttpClient httpClient = HttpClient.newHttpClient();
         HttpRequest httpRequest = HttpRequest.newBuilder().uri(URI.create(url)).POST(HttpRequest.BodyPublishers
-                        .ofString(newTraineeJson)).header("Content-Type", "application/json").build();
+                .ofString(newTraineeJson)).header("Content-Type", "application/json").build();
+        return sendRequest(httpRequest);
+    }
+
+    public static HttpResponse<String> sendTraineePutRequest(String newTraineeJson, String url) {
+        HttpRequest httpRequest = HttpRequest.newBuilder().uri(URI.create(url)).PUT(HttpRequest.BodyPublishers
+                .ofString(newTraineeJson)).header("Content-Type", "application/json").build();
+        return sendRequest(httpRequest);
+    }
+
+    private static HttpResponse<String> sendRequest(HttpRequest request) {
+        HttpClient httpClient = HttpClient.newHttpClient();
         HttpResponse<String> httpResponse = null;
         try {
-            httpResponse = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+            httpResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
             LogManager.writeLog(Level.INFO, "Connected to server, http response is: " + httpResponse.toString());
         } catch (IOException | InterruptedException e) {
             LogManager.writeLog(Level.SEVERE, "Error sending HTTP request");
@@ -140,9 +150,12 @@ public class ConnectionManager {
             return this;
         }
 
-        public UrlBuilder apiKey() {
-            link.append("key").append(Config.getApiKey());
-            return this;
+        public String getSpartanWithKey() {
+            return link.append("/spartans/").append(Config.getApiKey()).toString();
+        }
+
+        public String getCourseWithKey() {
+            return link.append("/courses/").append(Config.getApiKey()).toString();
         }
 
         public String getSpecificSpartan(String id) {
@@ -151,6 +164,14 @@ public class ConnectionManager {
 
         public String getSpecificCourse(Integer id) {
             return link.append("/courses/").append(id).toString();
+        }
+
+        public String getAllActiveCourses() {
+            return link.append("/courses/isActive").toString();
+        }
+
+        public String getAllInactiveCourses() {
+            return link.append("/courses/nonActive").toString();
         }
 
         public String link() { //Trailing & is fine, still works
