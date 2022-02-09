@@ -4,6 +4,7 @@ import org.junit.jupiter.api.*;
 import org.sparta.DTOs.CourseDTO;
 import org.sparta.DTOs.DTOEnum;
 import org.sparta.POJOs.CourseListPojos.CourseList;
+import org.sparta.POJOs.CourseListPojos.HATAEOSExtension.CourseSpartanLinks;
 import org.sparta.framework.connection.ConnectionManager;
 
 import java.util.List;
@@ -50,7 +51,9 @@ public class CourseTests {
                 id2Course = course;
             }
         }
+        
         id3Course = (CourseDTO) injectDTO(getCourseID3URL, DTOEnum.COURSE);
+        
         courseDTOWrapper = (CourseList) injectDTO(getAllActiveCoursesURL, DTOEnum.COURSE_LIST);
         if (courseDTOWrapper.getEmbedded()!= null){
             allActiveCoursesList = courseDTOWrapper.getEmbedded().getCourseDTOList();
@@ -109,6 +112,12 @@ public class CourseTests {
         @DisplayName("isActive is not Null")
         void isActiveIsNotNull(){
             Assertions.assertTrue(firstCourse.isActiveIsNotNull());
+        }
+
+        @Test
+        @DisplayName("links is not Null")
+        void linksIsNotNull(){
+            Assertions.assertTrue(firstCourse.linksIsNotNull());
         }
     }
 
@@ -171,6 +180,21 @@ public class CourseTests {
         @Test
         @DisplayName("Activation status is retrievable")
         void getActivationStatusTest(){Assertions.assertEquals(true, id3Course.isIsActive());}
+        
+        @Test
+        @DisplayName("Can HATEOAS links be found? ")
+        void canHateoasLinksBeFound() {
+            Assertions.assertTrue(id3Course.getLinks().getSpartanList().size() > 0);
+        }
+        
+        @Test
+        @DisplayName("Do HATEOAS links lead to valid URLs?")
+        void doHateoasLinksLeadToValidUrLs() {
+            for (CourseSpartanLinks courseSpartanLinks : id3Course.getLinks().getSpartanList()) {
+                Assertions.assertEquals(200, getStatusCode(courseSpartanLinks.getHref()));
+            }
+        }
+        
     }
 
     @Nested
