@@ -150,9 +150,12 @@ public class ConnectionManager {
             return this;
         }
 
-        public UrlBuilder apiKey() {
-            link.append("key").append(Config.getApiKey());
-            return this;
+        public String getSpartanWithKey() {
+            return link.append("/spartans/").append(Config.getApiKey()).toString();
+        }
+
+        public String getCourseWithKey() {
+            return link.append("/courses/").append(Config.getApiKey()).toString();
         }
 
         public String getSpecificSpartan(String id) {
