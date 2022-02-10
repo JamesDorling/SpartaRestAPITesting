@@ -10,6 +10,7 @@ import org.sparta.DTOs.TraineeDTOList;
 import org.sparta.crud_forms.AddTraineeForm;
 import org.sparta.crud_forms.UpdateTraineeForm;
 import org.sparta.framework.connection.ConnectionManager;
+import org.sparta.framework.connection.UrlBuilder;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
@@ -21,16 +22,22 @@ import static org.sparta.framework.connection.ConnectionManager.*;
 
 public class TraineeStepdefs {
 
-    static TraineeDTOList traineeDTOList = (TraineeDTOList) injectDTO(ConnectionManager.makeUrl().spartan().link(), DTOEnum.TRAINEE_LIST);
-    static List<TraineeDTO> traineeList = traineeDTOList.getEmbedded().getSpartanEntityList();
+    private static final TraineeDTOList traineeDTOList = (TraineeDTOList) injectDTO(ConnectionManager.makeUrl().spartan().link(), DTOEnum.TRAINEE_LIST);
+    private static List<TraineeDTO> traineeList = traineeDTOList.getEmbedded().getSpartanEntityList();
 
+    private String id;
     private String firstName;
     private String lastName;
     private int courseId;
     private String startDate;
     private String endDate;
+
     private LocalDate dateQuery;
 
+    @When("I enter ID of {string}")
+    public void iEnterIDOf(String arg0) {
+        id = arg0;
+    }
 
     @When("I enter first name {string}")
     public void iEnterFirstName(String arg0) {
@@ -91,7 +98,7 @@ public class TraineeStepdefs {
 
     @And("I send a PUT request")
     public void iSendAPUTRequest() {
-        UpdateTraineeForm newTrainee = new UpdateTraineeForm("6203d4425a7a6c0b58931ba5", firstName, lastName, courseId, startDate);
+        UpdateTraineeForm newTrainee = new UpdateTraineeForm(id, firstName, lastName, courseId, startDate);
         System.out.println("Generated trainee form: " + newTrainee.getJson());
         sendTraineePutRequest(newTrainee.getJson(), makeUrl().getSpartanWithKey());
     }
@@ -100,7 +107,7 @@ public class TraineeStepdefs {
     @Then("The trainee should be updated to have the name {string} {string}, a course ID of {int}, a start date of {string}, and an end date of {string}")
     public void theTraineeShouldBeUpdatedToHaveTheNameACourseIDOfAStartDateOfAndAnEndDateOf(String arg0, String arg1, int arg2, String arg3, String arg4) {
 
-        TraineeDTO trainee = (TraineeDTO) injectDTO(ConnectionManager.makeUrl().getSpecificSpartan("6203d4425a7a6c0b58931ba5"), DTOEnum.TRAINEE);
+        TraineeDTO trainee = (TraineeDTO) injectDTO(ConnectionManager.makeUrl().getSpecificSpartan(id), DTOEnum.TRAINEE);
 
         ArrayList<String> expected = new ArrayList<>();
         expected.add(arg0);
@@ -109,7 +116,7 @@ public class TraineeStepdefs {
         expected.add(arg3);
         expected.add(arg4);
 
-        System.out.println("Expected Array: " + expected);
+        System.out.println("Expected trainee: " + expected);
 
         ArrayList<String> received = new ArrayList<>();
         received.add(trainee.getFirstName());
@@ -118,7 +125,7 @@ public class TraineeStepdefs {
         received.add(trainee.getCourseStartDate());
         received.add(trainee.getCourseEndDate());
 
-        System.out.println("Received array: " + received);
+        System.out.println("Received trainee: " + received);
 
         for (int i = 0; i < expected.size(); i++) {
             Assertions.assertEquals(received.get(i), expected.get(i));
@@ -153,24 +160,138 @@ public class TraineeStepdefs {
     }
 
 
-    @When("I search before date {string}")
+    @When("I search: started before {string}")
     public void iSearchBeforeDate(String arg0) {
-        try {
-            dateQuery = LocalDate.parse(arg0);
-        } catch (DateTimeParseException e) {
-            e.printStackTrace();
-        }
+        parseDate(arg0);
 
     }
 
     @Then("I should receive all trainees that started before that date")
     public void iShouldReceiveAllTraineesThatStartedBeforeThatDate() {
-        TraineeDTOList traineeDTOList = (TraineeDTOList) injectDTO(ConnectionManager.makeUrl().spartan().BeforeAfter(UrlBuilder.TimeParameters.BEFORE).StartEnd(UrlBuilder.TimeParameters.START).date(dateQuery.toString()).link(), DTOEnum.TRAINEE_LIST);
-        System.out.println("Trainees started before " + dateQuery + ":");
+        TraineeDTOList traineeDTOList = (TraineeDTOList) injectDTO(ConnectionManager.makeUrl().spartan()
+                .BeforeAfter(UrlBuilder.TimeParameters.BEFORE)
+                .StartEnd(UrlBuilder.TimeParameters.START)
+                .date(dateQuery.toString()).link(), DTOEnum.TRAINEE_LIST);
 
-        for (TraineeDTO trainee : traineeDTOList.getEmbedded().getSpartanEntityList()) {
-            Assertions.assertTrue(trainee.getStartDateAsDate().isBefore(dateQuery));
-            System.out.print(trainee.getFullName() + ", ");
+        if (traineeDTOList.getEmbedded() == null) {
+            System.out.println("0 trainees started before " + dateQuery + ".");
+        } else {
+            System.out.println(traineeDTOList.getEmbedded().getSpartanEntityList().size() +  " trainees started before " + dateQuery + ":");
+            for (TraineeDTO trainee : traineeDTOList.getEmbedded().getSpartanEntityList()) {
+                Assertions.assertTrue(trainee.getStartDateAsDate().isBefore(dateQuery));
+                System.out.print(trainee.getFullName() +"(" + trainee.getCourseStartDate() + "), ");
+            }
         }
     }
+
+    @When("I search: started after {string}")
+    public void iSearchAfterDate(String arg0) {
+        parseDate(arg0);
+    }
+
+    @Then("I should receive all trainees that started after that date")
+    public void iShouldReceiveAllTraineesThatStartedAfterThatDate() {
+        TraineeDTOList traineeDTOList = (TraineeDTOList) injectDTO(ConnectionManager.makeUrl().spartan()
+                .BeforeAfter(UrlBuilder.TimeParameters.AFTER)
+                .StartEnd(UrlBuilder.TimeParameters.START)
+                .date(dateQuery.toString()).link(), DTOEnum.TRAINEE_LIST);
+
+        if (traineeDTOList.getEmbedded() == null) {
+            System.out.println("0 trainees started after " + dateQuery + ".");
+        } else {
+            System.out.println(traineeDTOList.getEmbedded().getSpartanEntityList().size() +  " trainees started after " + dateQuery + ":");
+            for (TraineeDTO trainee : traineeDTOList.getEmbedded().getSpartanEntityList()) {
+                Assertions.assertTrue(trainee.getStartDateAsDate().isAfter(dateQuery));
+                System.out.print(trainee.getFullName() +"(" + trainee.getCourseStartDate() + "), ");
+            }
+        }
+    }
+
+    @When("I search: started on {string}")
+    public void iSearchForDateString(String arg0) {
+        parseDate(arg0);
+    }
+
+
+    @Then("I should receive all trainees that started on that date")
+    public void iShouldReceiveAllTraineesThatStartedOnThatDate() {
+        TraineeDTOList traineeDTOList = (TraineeDTOList) injectDTO(ConnectionManager.makeUrl().spartan()
+                .BeforeAfter(UrlBuilder.TimeParameters.NOW)
+                .StartEnd(UrlBuilder.TimeParameters.START)
+                .date(dateQuery.toString()).link(), DTOEnum.TRAINEE_LIST);
+
+        if (traineeDTOList.getEmbedded() == null) {
+            System.out.println("0 trainees started on " + dateQuery + ".");
+        } else {
+            System.out.println(traineeDTOList.getEmbedded().getSpartanEntityList().size() +  " trainees started on " + dateQuery + ":");
+            for (TraineeDTO trainee : traineeDTOList.getEmbedded().getSpartanEntityList()) {
+                Assertions.assertEquals(trainee.getStartDateAsDate(), dateQuery);
+                System.out.print(trainee.getFullName() +"(" + trainee.getCourseStartDate() + "), ");
+            }
+        }
+    }
+
+    @When("I search: finished before {string}")
+    public void iSearchFinishedBeforeDate(String arg0) {
+        parseDate(arg0);
+    }
+
+    @Then("I should receive all trainees that finished before that date")
+    public void iShouldReceiveAllTraineesThatFinishedBeforeThatDate() {
+        TraineeDTOList traineeDTOList = (TraineeDTOList) injectDTO(ConnectionManager.makeUrl().spartan()
+                .BeforeAfter(UrlBuilder.TimeParameters.BEFORE)
+                .StartEnd(UrlBuilder.TimeParameters.END).date(dateQuery.toString()).link(), DTOEnum.TRAINEE_LIST);
+
+        if (traineeDTOList.getEmbedded() == null) {
+            System.out.println("0 trainees finished before " + dateQuery + ".");
+        } else {
+            System.out.println(traineeDTOList.getEmbedded().getSpartanEntityList().size() +  " trainees finished before " + dateQuery + ":");
+            for (TraineeDTO trainee : traineeDTOList.getEmbedded().getSpartanEntityList()) {
+                Assertions.assertTrue(trainee.getEndDateAsDate().isBefore(dateQuery));
+                System.out.print(trainee.getFullName() + "(" + trainee.getCourseEndDate() + ")" + ", ");
+            }
+        }
+    }
+
+    @When("I search: finished after {string}")
+    public void iSearchFinishedAfter(String arg0) {
+        parseDate(arg0);
+    }
+
+    @Then("I should receive all trainees that finished after that date")
+    public void iShouldReceiveAllTraineesThatFinishedAfterThatDate() {
+        TraineeDTOList traineeDTOList = (TraineeDTOList) injectDTO(ConnectionManager.makeUrl().spartan()
+                .BeforeAfter(UrlBuilder.TimeParameters.AFTER)
+                .StartEnd(UrlBuilder.TimeParameters.END)
+                .date(dateQuery.toString()).link(), DTOEnum.TRAINEE_LIST);
+
+        if (traineeDTOList.getEmbedded() == null) {
+            System.out.println("0 trainees finished after " + dateQuery + ".");
+        } else {
+            System.out.println(traineeDTOList.getEmbedded().getSpartanEntityList().size() +  " trainees finished after " + dateQuery + ":");
+            for (TraineeDTO trainee : traineeDTOList.getEmbedded().getSpartanEntityList()) {
+                Assertions.assertTrue(trainee.getEndDateAsDate().isAfter(dateQuery));
+                System.out.print(trainee.getFullName() + "(" + trainee.getCourseEndDate() + ")" + ", ");
+            }
+        }
+    }
+
+    @When("I search: finished on {string}")
+    public void iSearchFinishedAfterString(String arg0) {
+        parseDate(arg0);
+    }
+
+
+
+
+    private void parseDate(String arg0) {
+        try {
+            dateQuery = LocalDate.parse(arg0);
+        } catch (DateTimeParseException e) {
+            System.err.println("Incorrect date format. Please enter a date in the form \"yyyy-MM-dd\"");
+        }
+    }
+
+
+
 }
