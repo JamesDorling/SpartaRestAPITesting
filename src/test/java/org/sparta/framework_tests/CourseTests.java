@@ -21,8 +21,9 @@ public class CourseTests {
     private static CourseDTO devOpsCourse;
     private static CourseDTO id2Course;
 
-    private static final String getCourseID3URL = ConnectionManager.makeUrl().getSpecificCourse(3);
-    private static CourseDTO id3Course;
+    private static final String getSensibleCourseIDURL = ConnectionManager.makeUrl().getSpecificCourse(3);
+    private static CourseDTO sensibleIdCourse;
+    private static final String getSillyCourseIDURL = ConnectionManager.makeUrl().getSpecificCourse(-999);
 
     private static final String getAllActiveCoursesURL = ConnectionManager.makeUrl().getAllActiveCourses();
     private static List<CourseDTO> allActiveCoursesList;
@@ -41,13 +42,14 @@ public class CourseTests {
     private static final String partialCourseName = "a";
     private static final String getCourseByPartialName = ConnectionManager.makeUrl().course().courseName(partialCourseName).link();
     private static List<CourseDTO> courseWithPartialName;
+    private static final String wrongCourseName = "sailkudfghaslkjfdhlkashdfa";
+    private static final String getCourseBySillyName = ConnectionManager.makeUrl().course().courseName(wrongCourseName).link();
 
 
     @BeforeAll
     static void init() {
         CourseList courseDTOWrapper = (CourseList) injectDTO(allCoursesURL, DTOEnum.COURSE_LIST);
         allCoursesList = courseDTOWrapper.getEmbedded().getCourseDTOList();
-        firstCourse = allCoursesList.get(0);
         for (CourseDTO course: allCoursesList) {
             if (Objects.equals(course.getCourseName(), "DevOps")){
                 devOpsCourse = course;
@@ -56,19 +58,31 @@ public class CourseTests {
                 id2Course = course;
             }
         }
-        
-        id3Course = (CourseDTO) injectDTO(getCourseID3URL, DTOEnum.COURSE);
-        
-        courseDTOWrapper = (CourseList) injectDTO(getAllActiveCoursesURL, DTOEnum.COURSE_LIST);
-        if (courseDTOWrapper.getEmbedded()!= null){
+
+        if (getStatusCode(getSensibleCourseIDURL)==200) {
+            sensibleIdCourse = (CourseDTO) injectDTO(getSensibleCourseIDURL, DTOEnum.COURSE);
+        }
+
+        if (getStatusCode(getAllActiveCoursesURL)==200){
+            courseDTOWrapper = (CourseList) injectDTO(getAllActiveCoursesURL, DTOEnum.COURSE_LIST);
             allActiveCoursesList = courseDTOWrapper.getEmbedded().getCourseDTOList();
         }
 
-        courseDTOWrapper = (CourseList) injectDTO(getAllInactiveCoursesURL, DTOEnum.COURSE_LIST);
-        if (courseDTOWrapper.getEmbedded()!= null) {
+        if (getStatusCode(getAllInactiveCoursesURL)==200){
+            courseDTOWrapper = (CourseList) injectDTO(getAllInactiveCoursesURL, DTOEnum.COURSE_LIST);
             allInactiveCoursesList = courseDTOWrapper.getEmbedded().getCourseDTOList();
         }
 
+        if (getStatusCode(getCourseByName)==200){
+            courseDTOWrapper = (CourseList) injectDTO(getCourseByName, DTOEnum.COURSE_LIST);
+            courseWithName = courseDTOWrapper.getEmbedded().getCourseDTOList();
+        }
+
+        if (getStatusCode(getCourseByPartialName)==200){
+            courseDTOWrapper = (CourseList) injectDTO(getCourseByPartialName, DTOEnum.COURSE_LIST);
+            courseWithPartialName = courseDTOWrapper.getEmbedded().getCourseDTOList();
+        }
+      
         // Once there's a Course DeleteMapping, maybe change the example courseName and description
         newCourseJson = "{\"courseId\":\""+ allCoursesList.size() + 1 +"\"," +
                 "\"courseName\":\""+ "WeNeedACourseDeleteMapping" +"\"," +
@@ -81,11 +95,7 @@ public class CourseTests {
 
         courseDTOWrapper = (CourseList) injectDTO(getCourseByName, DTOEnum.COURSE_LIST);
         if (courseDTOWrapper.getEmbedded()!= null) {
-            courseWithName = courseDTOWrapper.getEmbedded().getCourseDTOList();
-        }
-        courseDTOWrapper = (CourseList) injectDTO(getCourseByPartialName, DTOEnum.COURSE_LIST);
-        if (courseDTOWrapper.getEmbedded()!= null) {
-            courseWithPartialName = courseDTOWrapper.getEmbedded().getCourseDTOList();
+          courseWithName = courseDTOWrapper.getEmbedded().getCourseDTOList();
         }
     }
 
@@ -96,43 +106,43 @@ public class CourseTests {
         @Test
         @DisplayName("Object Id is not Null")
         void objectIdIsNotNull(){
-            Assertions.assertTrue(firstCourse.idIsNotNull());
+            Assertions.assertTrue(sensibleIdCourse.idIsNotNull());
         }
 
         @Test
         @DisplayName("Course Id is not Null")
         void courseIdIsNotNull(){
-            Assertions.assertTrue(firstCourse.courseIdIsNotNull());
+            Assertions.assertTrue(sensibleIdCourse.courseIdIsNotNull());
         }
 
         @Test
         @DisplayName("Course Name is not Null")
         void courseNameIsNotNull(){
-            Assertions.assertTrue(firstCourse.courseNameIsNotNull());
+            Assertions.assertTrue(sensibleIdCourse.courseNameIsNotNull());
         }
 
         @Test
         @DisplayName("Course length is not Null")
         void courseLengthIsNotNull(){
-            Assertions.assertTrue(firstCourse.lengthIsNotNull());
+            Assertions.assertTrue(sensibleIdCourse.lengthIsNotNull());
         }
 
         @Test
         @DisplayName("Course Description is not Null")
         void courseDescriptionIsNotNull(){
-            Assertions.assertTrue(firstCourse.descriptionIsNotNull());
+            Assertions.assertTrue(sensibleIdCourse.descriptionIsNotNull());
         }
 
         @Test
         @DisplayName("isActive is not Null")
         void isActiveIsNotNull(){
-            Assertions.assertTrue(firstCourse.isActiveIsNotNull());
+            Assertions.assertTrue(sensibleIdCourse.isActiveIsNotNull());
         }
 
         @Test
         @DisplayName("links is not Null")
         void linksIsNotNull(){
-            Assertions.assertTrue(firstCourse.linksIsNotNull());
+            Assertions.assertTrue(sensibleIdCourse.linksIsNotNull());
         }
     }
 
@@ -170,42 +180,49 @@ public class CourseTests {
     @Nested
     @DisplayName("Do we get expected values from a get by id request?")
     class GetCourseByIDTests{
+
         @Test
-        @DisplayName("Successful Connection Test")
-        void connectionCode200Test() {
-            Assertions.assertEquals(200, getStatusCode(getCourseID3URL));
+        @DisplayName("Successful connection with sensible ID")
+        void successfulConnectionWithSensibleId() {
+            Assertions.assertEquals(200, getStatusCode(getSensibleCourseIDURL));
+        }
+
+        @Test
+        @DisplayName("Failed connection with silly ID")
+        void failedConnectionWithSillyId() {
+            Assertions.assertEquals(400, getStatusCode(getSillyCourseIDURL));
         }
 
         @Test
         @DisplayName("Course Id is retrievable")
-        void getCourseIdTest(){Assertions.assertEquals(3, id3Course.getCourseId());}
+        void getCourseIdTest(){Assertions.assertEquals(3, sensibleIdCourse.getCourseId());}
 
         @Test
         @DisplayName("Object id is retrievable")
-        void getObjectIDTest(){Assertions.assertEquals("62013367b76917a6dcd28f14", id3Course.getId());}
+        void getObjectIDTest(){Assertions.assertEquals("62013367b76917a6dcd28f14", sensibleIdCourse.getId());}
 
         @Test
         @DisplayName("Course name is retrievable")
-        void getCourseNameTest(){Assertions.assertEquals("Data", id3Course.getCourseName());}
+        void getCourseNameTest(){Assertions.assertEquals("Data", sensibleIdCourse.getCourseName());}
 
         @Test
         @DisplayName("Length of course is retrievable")
-        void getLengthOfCourseTest(){Assertions.assertEquals(8, id3Course.getLength());}
+        void getLengthOfCourseTest(){Assertions.assertEquals(8, sensibleIdCourse.getLength());}
 
         @Test
         @DisplayName("Activation status is retrievable")
-        void getActivationStatusTest(){Assertions.assertEquals(true, id3Course.isIsActive());}
+        void getActivationStatusTest(){Assertions.assertEquals(true, sensibleIdCourse.isIsActive());}
         
         @Test
         @DisplayName("Can HATEOAS links be found? ")
         void canHateoasLinksBeFound() {
-            Assertions.assertTrue(id3Course.getLinks().getSpartanList().size() > 0);
+            Assertions.assertTrue(sensibleIdCourse.getLinks().getSpartanList().size() > 0);
         }
         
         @Test
         @DisplayName("Do HATEOAS links lead to valid URLs?")
         void doHateoasLinksLeadToValidUrLs() {
-            for (CourseSpartanLinks courseSpartanLinks : id3Course.getLinks().getSpartanList()) {
+            for (CourseSpartanLinks courseSpartanLinks : sensibleIdCourse.getLinks().getSpartanList()) {
                 Assertions.assertEquals(200, getStatusCode(courseSpartanLinks.getHref()));
             }
         }
@@ -278,15 +295,21 @@ public class CourseTests {
     class TestSearchingForCoursesByName {
 
         @Test
-        @DisplayName("Successful Connection Test Full Name")
+        @DisplayName("Successful Connection with Full Name")
         void connectionCode200TestFull() {
             Assertions.assertEquals(200, getStatusCode(getCourseByName));
         }
 
         @Test
-        @DisplayName("Successful Connection Test Partial Name")
+        @DisplayName("Successful Connection with Partial Name")
         void connectionCode200TestPartial() {
             Assertions.assertEquals(200, getStatusCode(getCourseByPartialName));
+        }
+
+        @Test
+        @DisplayName("Failed connection with silly name")
+        void failedConnectionWithSillyName() {
+            Assertions.assertEquals(400, getStatusCode(getCourseBySillyName));
         }
 
         @Test
