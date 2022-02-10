@@ -36,7 +36,7 @@ public class ConnectionManager {
         return getResponse(url).statusCode();
     }
 
-    private static HttpResponse<String> getResponse(String url) {
+    public static HttpResponse<String> getResponse(String url) {
         return receiveResponse(url);
     }
 
