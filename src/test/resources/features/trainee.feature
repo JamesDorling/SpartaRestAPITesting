@@ -22,6 +22,12 @@ Feature: Testing the CRUD and search operations for trainees
 
         Then The trainee should be updated to have the name "Thomas" "Anderson", a course ID of 2, a start date of "2022-03-03", and an end date of "2022-04-28"
 
+        Scenario: Deleting a trainee
+          When I enter ID of "6203e3f9284e8006334cf067"
+          And I send a DELETE request
+
+          Then The trainee with the matching ID should be removed from the database
+
         Scenario: Searching for a trainee by first name
           When I search for first name "Testy"
           Then I should receive all trainees whose first name contains that
