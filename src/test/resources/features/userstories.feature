@@ -23,7 +23,7 @@ Feature: Just getting all the user stories down off the Jira so stepdefs can be 
         Scenario: Creating a new trainee
           Given I am creating a new trainee
           When I enter a start date
-          Then The trainee in the datebase should have the date I enter
+          Then The trainee in the database should have the date I enter
 
           Given I am creating a new trainee
           When I enter a first name and last name
@@ -58,15 +58,15 @@ Feature: Just getting all the user stories down off the Jira so stepdefs can be 
                 When I send a GET request with course name
                 Then I should receive all trainees on that course
 
-                  When I send a GET request with a start date
-                  Then I should recieve all trainees who started ON that date
+                When I send a GET request with a start date
+                Then I should receive all trainees who started ON that date
 
-                  When I send a GET request with first name "firstName" and last name "lastName"
-                  Then I should receive all trainees called "firsName" "lastName"
+                When I send a GET request with first name "firstName" and last name "lastName"
+                Then I should receive all trainees called "firstName" "lastName"
 
-                  When I send a GET request with an end date
-                  Then I should recieve all trainees that finish ON that date
+                When I send a GET request with an end date
+                Then I should receive all trainees that finish ON that date
 
-                  When I senc a GET request with an ID endpoint
-                  Then I should receive back the trainee with that ID
+                When I send a GET request with an ID endpoint
+                Then I should receive back the trainee with that ID
 
