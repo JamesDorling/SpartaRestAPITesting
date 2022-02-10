@@ -13,6 +13,7 @@ import org.sparta.framework.connection.ConnectionManager;
 import java.util.List;
 
 import static org.sparta.framework.Injector.injectDTO;
+import static org.sparta.framework.connection.ConnectionManager.getStatusCode;
 
 public class InjectorStepdefs {
 
@@ -44,6 +45,7 @@ public class InjectorStepdefs {
     public void iAmConnectedToTheDatabase() {
         TraineeDTOList traineeDTOList = (TraineeDTOList) injectDTO(ConnectionManager.makeUrl().spartan().link(), DTOEnum.TRAINEE_LIST);
         traineeList = traineeDTOList.getEmbedded().getSpartanEntityList();
+        Assertions.assertEquals(200, getStatusCode());
     }
 
     @When("I check the first trainee's name")
