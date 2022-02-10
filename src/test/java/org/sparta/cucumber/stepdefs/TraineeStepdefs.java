@@ -249,7 +249,7 @@ public class TraineeStepdefs {
     @Then("I should receive all trainees that started on that date")
     public void iShouldReceiveAllTraineesThatStartedOnThatDate() {
         TraineeDTOList traineeDTOList = (TraineeDTOList) injectDTO(ConnectionManager.makeUrl().spartan()
-                .BeforeAfter(UrlBuilder.TimeParameters.NOW)
+                .BeforeAfter(UrlBuilder.TimeParameters.SAME)
                 .StartEnd(UrlBuilder.TimeParameters.START)
                 .date(dateQuery.toString()).link(), DTOEnum.TRAINEE_LIST);
 
