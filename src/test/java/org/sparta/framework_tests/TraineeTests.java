@@ -19,12 +19,12 @@ import static org.sparta.framework.connection.ConnectionManager.sendDeleteReques
 public class TraineeTests {
     private TraineeDTO trainee;
     private static String idToTest;
-    private final boolean editDatabase = true; //Temporary boolean so I do not add an employee called "dames" every time I run tests
+    private final boolean editDatabase = false; //Temporary boolean so I do not add an employee called "dames" every time I run tests
 
     @BeforeEach
     void init() {
         AddTraineeForm newTrainee = new AddTraineeForm("test", "ok-to-delete", 1, "2023-02-05");
-        String[] response = sendTraineePostRequest(newTrainee.getJson(), makeUrl().getSpartanWithKey()).body().split(",");
+        String[] response = sendPostRequest(newTrainee.getJson(), makeUrl().getSpartanWithKey()).body().split(",");
         idToTest = response[0].split(":")[1].replace("\"", "");
         trainee = (TraineeDTO) injectDTO(ConnectionManager.makeUrl().getSpecificSpartan(idToTest), DTOEnum.TRAINEE);
     }
@@ -156,8 +156,8 @@ public class TraineeTests {
         @DisplayName("Posting a trainee")
         void postingATraineeTest() {
             Assumptions.assumeTrue(editDatabase);
-            sendTraineePostRequest(new AddTraineeForm("dames", "borling", 5, "2023-02-05").getJson(), makeUrl().getSpartanWithKey());
-            TraineeDTOList traineeDTOList = (TraineeDTOList) injectDTO(ConnectionManager.makeUrl().spartan().link(), DTOEnum.TRAINEE_LIST);
+            sendPostRequest(new AddTraineeForm("dames", "borling", 5, "2023-02-05").getJson(), makeUrl().getSpartanWithKey());
+            TraineeDTOList traineeDTOList = (TraineeDTOList) injectDTO(makeUrl().spartan().link(), DTOEnum.TRAINEE_LIST);
             Assertions.assertEquals("dames", traineeDTOList.getEmbedded().getSpartanEntityList().get(
                     traineeDTOList.getEmbedded().getSpartanEntityList().size()-1).getFirstName());
         }
@@ -166,7 +166,7 @@ public class TraineeTests {
         @DisplayName("Editing a trainee")
         void puttingATrainee() {
             Assumptions.assumeTrue(editDatabase);
-            sendTraineePutRequest(new UpdateTraineeForm(trainee.getId(), "james", "dorling", 2, "2023-01-01").getJson(), makeUrl().getSpartanWithKey());
+            sendPutRequest(new UpdateTraineeForm(trainee.getId(), "james", "dorling", 2, "2023-01-01").getJson(), makeUrl().getSpartanWithKey());
 
             TraineeDTO editedTrainee = (TraineeDTO) injectDTO(ConnectionManager.makeUrl().getSpecificSpartan(trainee.getId()), DTOEnum.TRAINEE);
             Assertions.assertEquals(2, editedTrainee.getCourseId());
@@ -177,7 +177,7 @@ public class TraineeTests {
         void deletingATrainee() {
             Assumptions.assumeTrue(editDatabase);
             //Add a trainee first. This is because I do not want to be able to accidentally delete data from the database at all.
-            String[] response = sendTraineePostRequest(new AddTraineeForm("delete", "this-guy", 1, "2023-02-05").getJson(), makeUrl().getSpartanWithKey()).body().split(",");
+            String[] response = sendPostRequest(new AddTraineeForm("delete", "this-guy", 1, "2023-02-05").getJson(), makeUrl().getSpartanWithKey()).body().split(",");
             String newID = response[0].split(":")[1].replace("\"", "");
             Assertions.assertEquals(204, sendDeleteRequest(makeUrl().deleteSpartan(newID)).statusCode());
         }
@@ -229,7 +229,7 @@ public class TraineeTests {
         @Test
         @DisplayName("Put without API key test")
         void putWithoutApiKeyTest() {
-            Assertions.assertEquals(401, sendTraineePutRequest(
+            Assertions.assertEquals(401, sendPutRequest(
                     new UpdateTraineeForm(trainee.getId(), "james", "dorling", 2, "2023-01-01")
                             .getJson(),makeUrl().getSpecificSpartan(trainee.getId())).statusCode());
         }
@@ -237,7 +237,7 @@ public class TraineeTests {
         @Test
         @DisplayName("Post without API key test")
         void postWithoutApiKeyTest() {
-            Assertions.assertEquals(401, sendTraineePostRequest(
+            Assertions.assertEquals(401, sendPostRequest(
                     new AddTraineeForm("delete", "this-guy", 1, "2023-02-05")
                             .getJson(),makeUrl().getSpecificSpartan(trainee.getId())).statusCode());
         }
@@ -245,7 +245,7 @@ public class TraineeTests {
         @Test
         @DisplayName("Put with partial data")
         void putWithPartialData() {
-            sendTraineePutRequest(new UpdateTraineeForm(trainee.getId(), null, null, 2, null).getJson(), makeUrl().getSpartanWithKey());
+            sendPutRequest(new UpdateTraineeForm(trainee.getId(), null, null, 2, null).getJson(), makeUrl().getSpartanWithKey());
             TraineeDTO editedTrainee = (TraineeDTO) injectDTO(ConnectionManager.makeUrl().getSpecificSpartan(trainee.getId()), DTOEnum.TRAINEE);
             Assertions.assertEquals(2, editedTrainee.getCourseId()); //Better to test this, as testing the status code here doesn't prove anything has changed.
         }
@@ -254,7 +254,7 @@ public class TraineeTests {
         @DisplayName("Post with partial data")
         void postWithPartialData() {
             Assumptions.assumeTrue(editDatabase);
-            Assertions.assertEquals(400, sendTraineePostRequest(new AddTraineeForm("dames", null, null, "2023-02-05").getJson(), makeUrl().getSpartanWithKey()).statusCode());
+            Assertions.assertEquals(400, sendPostRequest(new AddTraineeForm("dames", null, null, "2023-02-05").getJson(), makeUrl().getSpartanWithKey()).statusCode());
         }
     }
 }
