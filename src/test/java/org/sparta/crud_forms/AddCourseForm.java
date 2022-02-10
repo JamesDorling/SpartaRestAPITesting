@@ -2,12 +2,10 @@ package org.sparta.crud_forms;
 
 public class AddCourseForm {
     private static String courseJson;
-    public AddCourseForm(int courseId, String courseName, int length, String description, boolean active) {
-        courseJson = "{\"courseId\":\""+ courseId +"\"," +
-                "\"courseName\":\""+ courseName +"\"," +
+    public AddCourseForm(String courseName, int length, String description) {
+        courseJson = "{\"courseName\":\""+ courseName +"\"," +
                 "\"length\":"+ length +"," +
-                "\"description\":\""+ description +"\"}" +
-                "\"active\":\""+ active +"\"}";
+                "\"description\":\""+ description +"\"}";
     }
 
     public String getJson() {
