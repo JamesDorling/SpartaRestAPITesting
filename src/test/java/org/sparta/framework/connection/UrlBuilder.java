@@ -109,6 +109,11 @@ public class UrlBuilder {
         return link.append("/courses/nonActive").toString();
     }
 
+    public UrlBuilder getAdminKey(){
+        link.append("/login");
+        return this;
+    }
+
     public String link() { //Trailing & is fine, still works
         return link.toString();
     }
