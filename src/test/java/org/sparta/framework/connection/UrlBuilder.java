@@ -68,6 +68,15 @@ public class UrlBuilder {
         return this;
     }
 
+    public UrlBuilder userNameAndPassword(String username, String password) {
+        link.append("?username=").append(username).append("&password=").append(password);
+        return this;
+    }
+
+    public String courseWithAdminKey() {
+        return link.append("/courses/").append(getAdminKey()).toString();
+    }
+
     public UrlBuilder searchByDate(TimeParameters BeforeOrAfter, TimeParameters StartOrEnd, String date) {
         return this.BeforeAfter(BeforeOrAfter).StartEnd(StartOrEnd).date(date);
     }
