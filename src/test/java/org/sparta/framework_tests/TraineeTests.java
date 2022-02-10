@@ -242,5 +242,19 @@ public class TraineeTests {
                             .getJson(),makeUrl().getSpecificSpartan(trainee.getId())).statusCode());
         }
 
+        @Test
+        @DisplayName("Put with partial data")
+        void putWithPartialData() {
+            sendTraineePutRequest(new UpdateTraineeForm(trainee.getId(), null, null, 2, null).getJson(), makeUrl().getSpartanWithKey());
+            TraineeDTO editedTrainee = (TraineeDTO) injectDTO(ConnectionManager.makeUrl().getSpecificSpartan(trainee.getId()), DTOEnum.TRAINEE);
+            Assertions.assertEquals(2, editedTrainee.getCourseId()); //Better to test this, as testing the status code here doesn't prove anything has changed.
+        }
+
+        @Test
+        @DisplayName("Post with partial data")
+        void postWithPartialData() {
+            Assumptions.assumeTrue(editDatabase);
+            Assertions.assertEquals(400, sendTraineePostRequest(new AddTraineeForm("dames", null, null, "2023-02-05").getJson(), makeUrl().getSpartanWithKey()).statusCode());
+        }
     }
 }
