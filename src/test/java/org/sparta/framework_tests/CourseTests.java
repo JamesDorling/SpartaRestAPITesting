@@ -229,6 +229,12 @@ public class CourseTests {
     class PutCourseTests{
 
         @Test
+        @DisplayName("Do we get an error without using an API key?")
+        void doWeGetAnErrorWithoutUsingAnApiKey() {
+            Assertions.assertEquals(400,sendCoursePutRequest(newCourseJson, allCoursesURL).statusCode());
+        }
+
+        @Test
         @DisplayName("Course Id is retrievable")
             // Also below section of code should likely have allCoursesList.size() + 1 instead,
             // but that should only be changed once admin layer by devs is complete
@@ -329,6 +335,16 @@ public class CourseTests {
             for (CourseDTO courseDTO : courseWithPartialName) {
                 Assertions.assertTrue(courseDTO.getCourseName().contains(partialCourseName));
             }
+        }
+    }
+
+    @Nested
+    @DisplayName("POSTing courses")
+    class PosTingCourses {
+        @Test
+        @DisplayName("Do we get an error without using an API key?")
+        void doWeGetAnErrorWithoutUsingAnApiKey() {
+            Assertions.assertEquals(400,sendCoursePostRequest(newCourseJson, allCoursesURL).statusCode());
         }
     }
 }
