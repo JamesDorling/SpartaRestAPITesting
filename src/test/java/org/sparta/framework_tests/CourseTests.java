@@ -93,10 +93,6 @@ public class CourseTests {
         getPutCourseURL = ConnectionManager.makeUrl().getSpecificCourse(allCoursesList.size() + 1);
         putCourse = (CourseDTO) injectDTO(getPutCourseURL, DTOEnum.COURSE);
 
-        courseDTOWrapper = (CourseList) injectDTO(getCourseByName, DTOEnum.COURSE_LIST);
-        if (courseDTOWrapper.getEmbedded()!= null) {
-          courseWithName = courseDTOWrapper.getEmbedded().getCourseDTOList();
-        }
     }
 
     @Nested
