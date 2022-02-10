@@ -179,7 +179,8 @@ public class TraineeTests {
             //Add a trainee first. This is because I do not want to be able to accidentally delete data from the database at all.
             String[] response = sendPostRequest(new AddTraineeForm("delete", "this-guy", 1, "2023-02-05").getJson(), makeUrl().getSpartanWithKey()).body().split(",");
             String newID = response[0].split(":")[1].replace("\"", "");
-            Assertions.assertEquals(204, sendDeleteRequest(makeUrl().deleteSpartan(newID)).statusCode());
+            sendDeleteRequest(makeUrl().deleteSpartan(newID));
+            Assertions.assertEquals(404, ConnectionManager.getStatusCode(makeUrl().getSpecificSpartan(newID)));
         }
 
         @Test
@@ -255,6 +256,40 @@ public class TraineeTests {
         void postWithPartialData() {
             Assumptions.assumeTrue(editDatabase);
             Assertions.assertEquals(400, sendPostRequest(new AddTraineeForm("dames", null, null, "2023-02-05").getJson(), makeUrl().getSpartanWithKey()).statusCode());
+        }
+    }
+
+    @Nested
+    @DisplayName("HATEAOS Links")
+    class HateaosLinkTests {
+        @Test
+        @DisplayName("Self link exists on individual trainee")
+        void selfLinkExistsOnIndividualTrainee() {
+            TraineeDTO traineeDTO = (TraineeDTO) injectDTO(makeUrl().getSpecificSpartan(trainee.getId()), DTOEnum.TRAINEE);
+            Assertions.assertEquals(makeUrl().getSpecificSpartan(trainee.getId()), traineeDTO.getLinks().getSelf().getHref());
+        }
+
+        @Test
+        @DisplayName("Course link exists on individual trainee")
+        void courseLinkExistsOnIndividualTrainee() {
+            TraineeDTO traineeDTO = (TraineeDTO) injectDTO(makeUrl().getSpecificSpartan(trainee.getId()), DTOEnum.TRAINEE);
+            Assertions.assertEquals(makeUrl().getSpecificCourse(trainee.getCourseId()), traineeDTO.getLinks().getCourse().getHref());
+        }
+
+        @Test
+        @DisplayName("Self link exists on trainee list")
+        void selfLinkExistsOnTraineeList() {
+            TraineeDTOList traineeDTOList = (TraineeDTOList) injectDTO(makeUrl().spartan().link(), DTOEnum.TRAINEE_LIST);
+            TraineeDTO traineeDTO = traineeDTOList.getEmbedded().getSpartanEntityList().get(0);
+            Assertions.assertEquals(makeUrl().getSpecificSpartan(traineeDTO.getId()), traineeDTO.getLinks().getSelf().getHref());
+        }
+
+        @Test
+        @DisplayName("Course link exists on trainee list")
+        void courseLinkExistsOnTraineeList() {
+            TraineeDTOList traineeDTOList = (TraineeDTOList) injectDTO(makeUrl().spartan().link(), DTOEnum.TRAINEE_LIST);
+            TraineeDTO traineeDTO = traineeDTOList.getEmbedded().getSpartanEntityList().get(0);
+            Assertions.assertEquals(makeUrl().getSpecificCourse(traineeDTO.getCourseId()), traineeDTO.getLinks().getCourse().getHref());
         }
     }
 }

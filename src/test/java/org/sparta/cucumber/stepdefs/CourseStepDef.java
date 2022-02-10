@@ -5,11 +5,8 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.junit.jupiter.api.Assertions;
-import org.sparta.DTOs.CourseDTO;
-import org.sparta.DTOs.CourseDTOList;
-import org.sparta.DTOs.DTOEnum;
+import org.sparta.DTOs.*;
 import org.sparta.crud_forms.AddCourseForm;
-import org.sparta.DTOs.TraineeDTOList;
 import org.sparta.crud_forms.AddTraineeForm;
 import org.sparta.crud_forms.UpdateCourseForm;
 import org.sparta.framework.Injector;
@@ -23,6 +20,7 @@ import static org.sparta.framework.connection.ConnectionManager.*;
 
 public class CourseStepDef {
 
+    private String courseObjectID;
     private Integer courseId;
     private String courseName;
     private String description;
@@ -32,6 +30,8 @@ public class CourseStepDef {
     private String firstName;
     private String lastName;
     private String startDate;
+
+    private TraineeDTO trainee;
 
     private AddCourseForm courseForm;
 
@@ -91,4 +91,23 @@ public class CourseStepDef {
     }
 
 
+    @When("I send a put request to a course endpoint that updates the course endpoint")
+    public void iSendAPutRequestToACourseEndpointThatUpdatesTheCourseEndpoint() {
+        sendPutRequest(new UpdateCourseForm(courseObjectID, null, null, 2, null, null).getJson(), makeUrl().getCourseWithKey());
+    }
+
+    @Then("All trainees on that course should have their end date adjusted")
+    public void allTraineesOnThatCourseShouldHaveTheirEndDateAdjusted() {
+        TraineeDTO updatedTrainee = (TraineeDTO) injectDTO(makeUrl().getSpecificSpartan(trainee.getId()), DTOEnum.TRAINEE);
+        Assertions.assertEquals(trainee.getEndDateAsDate().plusWeeks(1), updatedTrainee.getEndDateAsDate());
+    }
+
+    @When("I create a new course with a trainee on it")
+    public void iCreateANewCourse() {
+        String[] response = sendPostRequest(new AddCourseForm("testCourse", 1, "A course for testing.").getJson(),
+                ConnectionManager.makeUrl().getCourseWithKey()).body().split(",");
+        courseObjectID = response[0].split(":")[1].replace("\"", "");
+        courseId = Integer.parseInt(response[1].split(":")[1].replace("\"", ""));
+        trainee = (TraineeDTO) injectDTO(sendPostRequest(new AddTraineeForm("test", "ok-to-delete", courseId,"23-01-01").getJson(), makeUrl().getSpartanWithKey()).body(), DTOEnum.TRAINEE);
+    }
 }

@@ -1,12 +1,15 @@
 package org.sparta.cucumber.stepdefs;
 
 import io.cucumber.java.en.And;
+import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Assumptions;
 import org.sparta.DTOs.DTOEnum;
 import org.sparta.DTOs.TraineeDTO;
 import org.sparta.DTOs.TraineeDTOList;
+import org.sparta.config.Config;
 import org.sparta.crud_forms.AddTraineeForm;
 import org.sparta.crud_forms.UpdateTraineeForm;
 import org.sparta.framework.connection.ConnectionManager;
@@ -199,7 +202,6 @@ public class TraineeStepdefs {
         }
     }
 
-
     @When("I search: started before {string}")
     public void iSearchBeforeDate(String arg0) {
         parseDate(arg0);
@@ -358,5 +360,10 @@ public class TraineeStepdefs {
         } catch (DateTimeParseException e) {
             System.err.println("Incorrect date format. Please enter a date in the form \"yyyy-MM-dd\"");
         }
+    }
+
+    @Given("I have an API key")
+    public void iHaveAnAPIKey() {
+        Assumptions.assumeTrue(Config.getApiKey() != null);
     }
 }
