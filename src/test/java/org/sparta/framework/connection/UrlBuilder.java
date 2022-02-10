@@ -52,7 +52,7 @@ public class UrlBuilder {
         switch (parameter) {
             case BEFORE -> link.append("before&");
             case AFTER -> link.append("after&");
-            case NOW -> link.append("now&");
+            case SAME -> link.append("now&");
             default -> throw new IllegalStateException("Unexpected value (Time Parameter): " + parameter.name());
         }
         return this;
@@ -106,7 +106,7 @@ public class UrlBuilder {
 
     public enum TimeParameters {
         BEFORE,
-        NOW,
+        SAME,
         AFTER,
         START,
         END
