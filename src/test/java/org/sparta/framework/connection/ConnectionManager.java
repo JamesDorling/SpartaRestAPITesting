@@ -75,6 +75,11 @@ public class ConnectionManager {
         return sendRequest(httpRequest);
     }
 
+    public static HttpResponse<String> sendDeleteRequest(String url) {
+        HttpRequest httpRequest = HttpRequest.newBuilder().uri(URI.create(url)).DELETE().build();
+        return sendRequest(httpRequest);
+    }
+
 
     private static HttpResponse<String> sendRequest(HttpRequest request) {
         HttpClient httpClient = HttpClient.newHttpClient();

@@ -13,16 +13,25 @@ import java.time.LocalDate;
 
 import static org.sparta.framework.connection.ConnectionManager.*;
 import static org.sparta.framework.Injector.*;
+import static org.sparta.framework.connection.ConnectionManager.sendDeleteRequest;
 
 @TestMethodOrder(value = MethodOrderer.OrderAnnotation.class)
 public class TraineeTests {
     private TraineeDTO trainee;
-    private static final String idToTest = "6203d4a251765e2883463d9b";
-    private final boolean editDatabase = false; //Temporary boolean so I do not add an employee called "dames" every time I run tests
+    private static String idToTest;
+    private final boolean editDatabase = true; //Temporary boolean so I do not add an employee called "dames" every time I run tests
 
     @BeforeEach
     void init() {
+        AddTraineeForm newTrainee = new AddTraineeForm("test", "ok-to-delete", 1, "2023-02-05");
+        String[] response = sendTraineePostRequest(newTrainee.getJson(), makeUrl().getSpartanWithKey()).body().split(",");
+        idToTest = response[0].split(":")[1].replace("\"", "");
         trainee = (TraineeDTO) injectDTO(ConnectionManager.makeUrl().getSpecificSpartan(idToTest), DTOEnum.TRAINEE);
+    }
+
+    @AfterEach
+    void cleanUp() {
+        sendDeleteRequest(makeUrl().deleteSpartan(idToTest)); //Delete the spartan that was just tested on
     }
 
     @Nested
@@ -37,18 +46,18 @@ public class TraineeTests {
 
         @Test
         @DisplayName("Name is Correct Test")
-        void fullNameTest() {Assertions.assertEquals("james dorling", trainee.getFullName());}
+        void fullNameTest() {Assertions.assertEquals("test ok-to-delete", trainee.getFullName());}
 
         @Test
         @DisplayName("StartDate as Date Returns Correct Date Test")
         void startDateAsDateTest() {
-            Assertions.assertEquals(LocalDate.of(2023, 1, 1), trainee.getStartDateAsDate());
+            Assertions.assertEquals(LocalDate.of(2023, 2, 5), trainee.getStartDateAsDate());
         }
 
         @Test
         @DisplayName("EndDate as Date Returns Correct Date Test")
         void endDateAsDateTest() {
-            Assertions.assertEquals(LocalDate.of(2023, 2, 26), trainee.getEndDateAsDate());
+            Assertions.assertEquals(LocalDate.of(2023, 4, 2), trainee.getEndDateAsDate());
         }
 
         @Test
@@ -101,7 +110,7 @@ public class TraineeTests {
 
         @Test
         @DisplayName("Course Name is correct")
-        void courseNameIsCorrect() {Assertions.assertEquals("c#", trainee.getCourseName());} //Im not on this course but still
+        void courseNameIsCorrect() {Assertions.assertEquals("java", trainee.getCourseName());} //Im not on this course but still
     }
 
     @Nested
@@ -110,23 +119,23 @@ public class TraineeTests {
     class TraineePojoTests {
         @Test
         @DisplayName("First Name is Correct Test")
-        void firstNameTest() {Assertions.assertEquals("james", trainee.getFirstName());}
+        void firstNameTest() {Assertions.assertEquals("test", trainee.getFirstName());}
 
         @Test
         @DisplayName("Last Name is Correct Test")
-        void lastNameTest() {Assertions.assertEquals("dorling", trainee.getLastName());}
+        void lastNameTest() {Assertions.assertEquals("ok-to-delete", trainee.getLastName());}
 
         @Test
         @DisplayName("Course Start Date is Correct")
-        void courseStartIsCorrect() {Assertions.assertEquals("2023-01-01", trainee.getCourseStartDate());}
+        void courseStartIsCorrect() {Assertions.assertEquals("2023-02-05", trainee.getCourseStartDate());}
 
         @Test
         @DisplayName("Course End Date is Correct")
-        void courseEndDateIsCorrect() {Assertions.assertEquals("2023-02-26", trainee.getCourseEndDate());}
+        void courseEndDateIsCorrect() {Assertions.assertEquals("2023-04-02", trainee.getCourseEndDate());}
 
         @Test
         @DisplayName("Course ID is Correct")
-        void courseIdIsCorrectTest() {Assertions.assertEquals(2, trainee.getCourseId());}
+        void courseIdIsCorrectTest() {Assertions.assertEquals(1, trainee.getCourseId());}
 
         @Test
         @DisplayName("Trainee ID is Correct")
@@ -142,15 +151,12 @@ public class TraineeTests {
         void getTraineeById() {
             Assertions.assertNotNull(trainee);
         }
-        
+
         @Test
         @DisplayName("Posting a trainee")
         void postingATraineeTest() {
             Assumptions.assumeTrue(editDatabase);
-            AddTraineeForm newTrainee = new AddTraineeForm("dames", "borling", 5, "2023-02-05");
-            sendTraineePostRequest(newTrainee.getJson(), makeUrl().getSpartanWithKey());
-            System.out.println(makeUrl().spartan().getSpartanWithKey());
-
+            sendTraineePostRequest(new AddTraineeForm("dames", "borling", 5, "2023-02-05").getJson(), makeUrl().getSpartanWithKey());
             TraineeDTOList traineeDTOList = (TraineeDTOList) injectDTO(ConnectionManager.makeUrl().spartan().link(), DTOEnum.TRAINEE_LIST);
             Assertions.assertEquals("dames", traineeDTOList.getEmbedded().getSpartanEntityList().get(
                     traineeDTOList.getEmbedded().getSpartanEntityList().size()-1).getFirstName());
@@ -160,11 +166,20 @@ public class TraineeTests {
         @DisplayName("Editing a trainee")
         void puttingATrainee() {
             Assumptions.assumeTrue(editDatabase);
-            UpdateTraineeForm updateTrainee = new UpdateTraineeForm(trainee.getId(), "james", "dorling", 2, "2023-01-01");
-            sendTraineePutRequest(updateTrainee.getJson(), makeUrl().getSpartanWithKey());
+            sendTraineePutRequest(new UpdateTraineeForm(trainee.getId(), "james", "dorling", 2, "2023-01-01").getJson(), makeUrl().getSpartanWithKey());
 
             TraineeDTO editedTrainee = (TraineeDTO) injectDTO(ConnectionManager.makeUrl().getSpecificSpartan(trainee.getId()), DTOEnum.TRAINEE);
             Assertions.assertEquals(2, editedTrainee.getCourseId());
+        }
+
+        @Test
+        @DisplayName("Deleting a Trainee")
+        void deletingATrainee() {
+            Assumptions.assumeTrue(editDatabase);
+            //Add a trainee first. This is because I do not want to be able to accidentally delete data from the database at all.
+            String[] response = sendTraineePostRequest(new AddTraineeForm("delete", "this-guy", 1, "2023-02-05").getJson(), makeUrl().getSpartanWithKey()).body().split(",");
+            String newID = response[0].split(":")[1].replace("\"", "");
+            Assertions.assertEquals(204, sendDeleteRequest(makeUrl().deleteSpartan(newID)).statusCode());
         }
 
         @Test
@@ -176,15 +191,15 @@ public class TraineeTests {
         @Test
         @DisplayName("Searching for a spartan by first name")
         void searchingForASpartanByFirstNameTest() {
-            TraineeDTOList traineeDTOList = (TraineeDTOList) injectDTO(ConnectionManager.makeUrl().spartan().firstName("james").link(), DTOEnum.TRAINEE_LIST);
-            Assertions.assertEquals(traineeDTOList.getEmbedded().getSpartanEntityList().get(0).getFirstName().toLowerCase(), "james");
+            TraineeDTOList traineeDTOList = (TraineeDTOList) injectDTO(ConnectionManager.makeUrl().spartan().firstName("test").link(), DTOEnum.TRAINEE_LIST);
+            Assertions.assertTrue(traineeDTOList.getEmbedded().getSpartanEntityList().get(0).getFirstName().toLowerCase().contains("test"));
         }
 
         @Test
         @DisplayName("Searching for a spartan by last name")
         void searchingForASpartanByLastName() {
-            TraineeDTOList traineeDTOList = (TraineeDTOList) injectDTO(ConnectionManager.makeUrl().spartan().lastName("dorling").link(), DTOEnum.TRAINEE_LIST);
-            Assertions.assertEquals(traineeDTOList.getEmbedded().getSpartanEntityList().get(0).getLastName(), "dorling");
+            TraineeDTOList traineeDTOList = (TraineeDTOList) injectDTO(ConnectionManager.makeUrl().spartan().lastName("ok-to-delete").link(), DTOEnum.TRAINEE_LIST);
+            Assertions.assertTrue(traineeDTOList.getEmbedded().getSpartanEntityList().get(0).getLastName().contains( "ok-to-delete"));
         }
 
         @Test
@@ -204,5 +219,28 @@ public class TraineeTests {
             Assertions.assertTrue(traineeDTOList.getEmbedded().getSpartanEntityList().get(0).getEndDateAsDate()
                     .isAfter(LocalDate.of(2021, 1,1)));
         }
+
+        @Test
+        @DisplayName("Delete without API key test")
+        void deleteWithoutApiKeyTest() {
+            Assertions.assertEquals(401, sendDeleteRequest(makeUrl().getSpecificSpartan(trainee.getId())).statusCode());
+        }
+
+        @Test
+        @DisplayName("Put without API key test")
+        void putWithoutApiKeyTest() {
+            Assertions.assertEquals(401, sendTraineePutRequest(
+                    new UpdateTraineeForm(trainee.getId(), "james", "dorling", 2, "2023-01-01")
+                            .getJson(),makeUrl().getSpecificSpartan(trainee.getId())).statusCode());
+        }
+
+        @Test
+        @DisplayName("Post without API key test")
+        void postWithoutApiKeyTest() {
+            Assertions.assertEquals(401, sendTraineePostRequest(
+                    new AddTraineeForm("delete", "this-guy", 1, "2023-02-05")
+                            .getJson(),makeUrl().getSpecificSpartan(trainee.getId())).statusCode());
+        }
+
     }
 }
