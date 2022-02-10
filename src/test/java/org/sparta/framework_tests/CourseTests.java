@@ -89,7 +89,7 @@ public class CourseTests {
                 "\"length\":"+ 8 +"," +
                 "\"description\":\""+ "WeNeedACourseDeleteMapping" +"\"}" +
                 "\"active\":\""+ true +"\"}";
-        sendCoursePostRequest(newCourseJson, putCourseURL);
+        sendPostRequest(newCourseJson, putCourseURL);
         getPutCourseURL = ConnectionManager.makeUrl().getSpecificCourse(allCoursesList.size() + 1);
         putCourse = (CourseDTO) injectDTO(getPutCourseURL, DTOEnum.COURSE);
 

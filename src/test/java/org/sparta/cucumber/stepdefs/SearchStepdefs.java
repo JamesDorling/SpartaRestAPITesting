@@ -10,8 +10,8 @@ import static org.sparta.framework.Injector.*;
 import static org.sparta.framework.connection.ConnectionManager.*;
 
 public class SearchStepdefs {
-    TraineeDTO trainee;
-    TraineeDTOList traineeList;
+    private TraineeDTO trainee;
+    private TraineeDTOList traineeList;
 
     @When("I send a GET request with course name")
     public void iSendAGETRequestWithCourseName() {

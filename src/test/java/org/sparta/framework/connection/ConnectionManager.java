@@ -1,6 +1,5 @@
 package org.sparta.framework.connection;
 
-import org.sparta.config.Config;
 import org.sparta.framework.logging.LogManager;
 
 import java.io.IOException;
@@ -57,21 +56,15 @@ public class ConnectionManager {
         return httpResponse;
     }
 
-    public static HttpResponse<String> sendTraineePostRequest(String newTraineeJson, String url) {
+    public static HttpResponse<String> sendPostRequest(String newJson, String url) {
         HttpRequest httpRequest = HttpRequest.newBuilder().uri(URI.create(url)).POST(HttpRequest.BodyPublishers
-                .ofString(newTraineeJson)).header("Content-Type", "application/json").build();
+                .ofString(newJson)).header("Content-Type", "application/json").build();
         return sendRequest(httpRequest);
     }
 
-    public static HttpResponse<String> sendTraineePutRequest(String newTraineeJson, String url) {
+    public static HttpResponse<String> sendPutRequest(String newJson, String url) {
         HttpRequest httpRequest = HttpRequest.newBuilder().uri(URI.create(url)).PUT(HttpRequest.BodyPublishers
-                .ofString(newTraineeJson)).header("Content-Type", "application/json").build();
-        return sendRequest(httpRequest);
-    }
-
-    public static HttpResponse<String> sendCoursePostRequest(String newCourseJson, String url) {
-        HttpRequest httpRequest = HttpRequest.newBuilder().uri(URI.create(url)).POST(HttpRequest.BodyPublishers
-                .ofString(newCourseJson)).header("Content-Type", "application/json").build();
+                .ofString(newJson)).header("Content-Type", "application/json").build();
         return sendRequest(httpRequest);
     }
 

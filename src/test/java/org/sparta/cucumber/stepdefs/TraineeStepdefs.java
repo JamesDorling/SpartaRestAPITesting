@@ -63,7 +63,7 @@ public class TraineeStepdefs {
     public void iSendAPOSTRequest() {
         AddTraineeForm newTrainee = new AddTraineeForm(firstName, lastName, courseId, startDate);
         System.out.println("Generated trainee form: " + newTrainee.getJson());
-        sendTraineePostRequest(newTrainee.getJson(), makeUrl().getSpartanWithKey());
+        sendPostRequest(newTrainee.getJson(), makeUrl().getSpartanWithKey());
     }
 
     @Then("A trainee should be created with the name {string} {string}, a course ID of {int}, a start date of {string}, and an end date of {string}")
@@ -83,15 +83,12 @@ public class TraineeStepdefs {
 
         ArrayList<String> received = new ArrayList<>();
 
-        for (TraineeDTO trainee : traineeList) {
-            if (trainee.getFirstName().equals(firstName)){
-                received.add(traineeList.get(traineeList.size()-1).getFirstName());
-                received.add(traineeList.get(traineeList.size()-1).getLastName());
-                received.add(String.valueOf(traineeList.get(traineeList.size()-1).getCourseId()));
-                received.add(traineeList.get(traineeList.size()-1).getCourseStartDate());
-                received.add(traineeList.get(traineeList.size()-1).getCourseEndDate());
-            }
-        }
+        received.add(traineeList.get(traineeList.size() - 1).getFirstName());
+        received.add(traineeList.get(traineeList.size() - 1).getLastName());
+        received.add(String.valueOf(traineeList.get(traineeList.size() - 1).getCourseId()));
+        received.add(traineeList.get(traineeList.size() - 1).getCourseStartDate());
+        received.add(traineeList.get(traineeList.size() - 1).getCourseEndDate());
+
 
 
         System.out.println("Received trainee: " + received);
@@ -106,7 +103,7 @@ public class TraineeStepdefs {
     public void iSendAPUTRequest() {
         UpdateTraineeForm newTrainee = new UpdateTraineeForm(id, firstName, lastName, courseId, startDate);
         System.out.println("Generated trainee form: " + newTrainee.getJson());
-        sendTraineePutRequest(newTrainee.getJson(), makeUrl().getSpartanWithKey());
+        sendPutRequest(newTrainee.getJson(), makeUrl().getSpartanWithKey());
     }
 
 
@@ -317,7 +314,7 @@ public class TraineeStepdefs {
     @Then("I should receive all trainees that finished on that date")
     public void iShouldReceiveAllTraineesThatFinishedOnThatDate() {
         TraineeDTOList traineeDTOList = (TraineeDTOList) injectDTO(ConnectionManager.makeUrl().spartan()
-                .BeforeAfter(UrlBuilder.TimeParameters.NOW)
+                .BeforeAfter(UrlBuilder.TimeParameters.SAME)
                 .StartEnd(UrlBuilder.TimeParameters.END)
                 .date(dateQuery.toString()).link(), DTOEnum.TRAINEE_LIST);
 
