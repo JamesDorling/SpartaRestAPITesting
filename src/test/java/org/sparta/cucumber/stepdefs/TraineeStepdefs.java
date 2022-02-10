@@ -205,7 +205,6 @@ public class TraineeStepdefs {
     @When("I search: started before {string}")
     public void iSearchBeforeDate(String arg0) {
         parseDate(arg0);
-
     }
 
     @Then("I should receive all trainees that started before that date")

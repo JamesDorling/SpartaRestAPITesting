@@ -1,5 +1,6 @@
 package org.sparta.framework_tests;
 
+import net.bytebuddy.asm.Advice;
 import org.sparta.DTOs.DTOEnum;
 import org.sparta.DTOs.TraineeDTO;
 import org.sparta.DTOs.TraineeDTOList;
@@ -10,6 +11,7 @@ import org.sparta.framework.connection.ConnectionManager;
 import org.sparta.framework.connection.UrlBuilder;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import static org.sparta.framework.connection.ConnectionManager.*;
 import static org.sparta.framework.Injector.*;
@@ -256,6 +258,36 @@ public class TraineeTests {
         void postWithPartialData() {
             Assumptions.assumeTrue(editDatabase);
             Assertions.assertEquals(400, sendPostRequest(new AddTraineeForm("dames", null, null, "2023-02-05").getJson(), makeUrl().getSpartanWithKey()).statusCode());
+        }
+
+        @Test
+        @DisplayName("Get active trainees")
+        void getActiveTraineesTest() {
+            TraineeDTOList traineeDTOList = (TraineeDTOList) injectDTO(ConnectionManager.makeUrl().spartan().active(true).link(), DTOEnum.TRAINEE_LIST);
+            List<TraineeDTO> trainees = traineeDTOList.getEmbedded().getSpartanEntityList();
+            boolean allCorrect = true;
+            for (TraineeDTO traineeDTO : trainees) {
+                if(traineeDTO.getEndDateAsDate().isBefore(LocalDate.now())) {
+                    allCorrect = false;
+                    break;
+                }
+            }
+            Assertions.assertTrue(allCorrect);
+        }
+
+        @Test
+        @DisplayName("Get inactive trainees")
+        void getInactiveTraineesTest() {
+            TraineeDTOList traineeDTOList = (TraineeDTOList) injectDTO(ConnectionManager.makeUrl().spartan().active(false).link(), DTOEnum.TRAINEE_LIST);
+            List<TraineeDTO> trainees = traineeDTOList.getEmbedded().getSpartanEntityList();
+            boolean allCorrect = true;
+            for (TraineeDTO traineeDTO : trainees) {
+                if(traineeDTO.getEndDateAsDate().isAfter(LocalDate.now()) && traineeDTO.getStartDateAsDate().isBefore(LocalDate.now())) {
+                    allCorrect = false;
+                    break;
+                }
+            }
+            Assertions.assertTrue(allCorrect);
         }
     }
 

@@ -1,24 +1,22 @@
 Feature: Just getting all the user stories down off the Jira so stepdefs can be written at some point
   Background: Connected
     Given I am connected to the database
+    And I have an API key
 
-  Background: I have an API key
-    Given I have an API key
-
-  Scenario: Checking total number of trainees
-    Given I want to know what the total number of trainees are
-    When I query the total number of employees
-    Then I should receive the sum total of trainees
-
-  Scenario: Storing data in NoSQL database
-    Given I am connected to the NoSQL database
-    When I want to save an employee
-    Then They are stored in the database
-
-  Scenario: Checking all available courses
-    Given I am connected to the NoSQL database
-    When I search by course endpoint
-    Then I should be shown all the courses that are on offer
+#  Scenario: Checking total number of trainees
+#    Given I want to know what the total number of trainees are
+#    When I query the total number of employees
+#    Then I should receive the sum total of trainees
+#
+#  Scenario: Storing data in NoSQL database
+#    Given I am connected to the NoSQL database
+#    When I want to save an employee
+#    Then They are stored in the database
+#
+#  Scenario: Checking all available courses
+#    Given I am connected to the NoSQL database
+#    When I search by course endpoint
+#    Then I should be shown all the courses that are on offer
 
   Scenario: Assigning trainees to a course
     Given I am creating a new course
