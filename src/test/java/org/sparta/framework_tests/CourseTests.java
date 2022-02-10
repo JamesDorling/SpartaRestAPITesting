@@ -33,7 +33,7 @@ public class CourseTests {
     private static final String getAllInactiveCoursesURL = ConnectionManager.makeUrl().getAllInactiveCourses();
     private static List<CourseDTO> allInactiveCoursesList;
 
-    private static final String courseWithKeyURL = ConnectionManager.makeUrl().getCourseWithKey();
+    private static final String courseWithKeyURL = ConnectionManager.makeUrl().getCourseWithKey() + adminKey;
     private static CourseDTO postCourse;
     private static String newCourseJson;
     private static String getPostCourseURL;
@@ -94,14 +94,15 @@ public class CourseTests {
         sendPostRequest(newCourseJson, courseWithKeyURL);
         // Also below section of code should likely have allCoursesList.size() + 1 instead,
         // but that should only be changed once admin layer by devs is complete
-        getPostCourseURL = ConnectionManager.makeUrl().getSpecificCourse(allCoursesList.size());
+        getPostCourseURL = ConnectionManager.makeUrl().getSpecificCourse(allCoursesList.size()) + adminKey;
         postCourse = (CourseDTO) injectDTO(getPostCourseURL, DTOEnum.COURSE);
 
         putCourseJson = new UpdateCourseForm("6203d66702673b3a3eccc999", 7, "JavaScript", 8, "Javascript", true).getJson();
         sendPutRequest(putCourseJson, courseWithKeyURL);
 
-        getPutCourseURL = ConnectionManager.makeUrl().getSpecificCourse(7);
+        getPutCourseURL = ConnectionManager.makeUrl().getSpecificCourse(7) + adminKey;
         putCourse = (CourseDTO) injectDTO(getPutCourseURL, DTOEnum.COURSE);
+
     }
 
     @Nested
