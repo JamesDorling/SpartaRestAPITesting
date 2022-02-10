@@ -48,21 +48,21 @@ public class UrlBuilder {
     }
 
     public UrlBuilder BeforeAfter(TimeParameters parameter) {
-        link.append("BeforeAfter=");
+        link.append("beforeAfter=");
         switch (parameter) {
-            case BEFORE -> link.append("Before");
-            case AFTER -> link.append("After");
-            case NOW -> link.append("Now");
+            case BEFORE -> link.append("before&");
+            case AFTER -> link.append("after&");
+            case NOW -> link.append("now&");
             default -> throw new IllegalStateException("Unexpected value (Time Parameter): " + parameter.name());
         }
         return this;
     }
 
     public UrlBuilder StartEnd(TimeParameters parameter) {
-        link.append("StartEnd=");
+        link.append("startEnd=");
         switch (parameter) {
-            case START -> link.append("Start");
-            case END -> link.append("End");
+            case START -> link.append("start&");
+            case END -> link.append("end&");
             default -> throw new IllegalStateException("Unexpected value (Time Parameter): " + parameter.name());
         }
         return this;
