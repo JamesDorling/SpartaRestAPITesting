@@ -69,6 +69,18 @@ public class ConnectionManager {
         return sendRequest(httpRequest);
     }
 
+    public static HttpResponse<String> sendCoursePostRequest(String newCourseJson, String url) {
+        HttpRequest httpRequest = HttpRequest.newBuilder().uri(URI.create(url)).POST(HttpRequest.BodyPublishers
+                .ofString(newCourseJson)).header("Content-Type", "application/json").build();
+        return sendRequest(httpRequest);
+    }
+
+    public static HttpResponse<String> sendDeleteRequest(String url) {
+        HttpRequest httpRequest = HttpRequest.newBuilder().uri(URI.create(url)).DELETE().build();
+        return sendRequest(httpRequest);
+    }
+
+
     private static HttpResponse<String> sendRequest(HttpRequest request) {
         HttpClient httpClient = HttpClient.newHttpClient();
         HttpResponse<String> httpResponse = null;
