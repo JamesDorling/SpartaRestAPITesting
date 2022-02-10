@@ -1,16 +1,16 @@
-package org.sparta.POJOs;
+package org.sparta.POJOs.LinkPojos;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class Links{
+public class SpartanHATEOASLinks {
 
 	@JsonProperty("course")
-	private Course course;
+	private SpartanCourseLink course;
 
 	@JsonProperty("self")
 	private Self self;
 
-	public Course getCourse(){
+	public SpartanCourseLink getCourse(){
 		return course;
 	}
 

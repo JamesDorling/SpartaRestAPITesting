@@ -1,6 +1,7 @@
-package org.sparta.POJOs;
+package org.sparta.POJOs.TraineePojos;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.sparta.POJOs.LinkPojos.SpartanHATEOASLinks;
 
 public class TraineePojo{
 
@@ -11,7 +12,7 @@ public class TraineePojo{
 	private String lastName;
 
 	@JsonProperty("_links")
-	private Links links;
+	private SpartanHATEOASLinks spartanHATEOASLinks;
 
 	@JsonProperty("id")
 	private String id;
@@ -33,8 +34,8 @@ public class TraineePojo{
 		return lastName;
 	}
 
-	public Links getLinks(){
-		return links;
+	public SpartanHATEOASLinks getLinks(){
+		return spartanHATEOASLinks;
 	}
 
 	public String getId(){
@@ -59,7 +60,7 @@ public class TraineePojo{
 			"TraineePojo{" + 
 			"firstName = '" + firstName + '\'' + 
 			",lastName = '" + lastName + '\'' + 
-			",_links = '" + links + '\'' + 
+			",_links = '" + spartanHATEOASLinks + '\'' +
 			",id = '" + id + '\'' + 
 			",courseEndDate = '" + courseEndDate + '\'' + 
 			",courseStartDate = '" + courseStartDate + '\'' + 
