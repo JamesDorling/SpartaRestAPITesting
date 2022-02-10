@@ -17,6 +17,8 @@ import static org.sparta.framework.connection.ConnectionManager.*;
 
 public class CourseTests {
 
+    private static final String adminKey = getAdminKey();
+
     private static final String allCoursesURL = ConnectionManager.makeUrl().course().link();
     private static List<CourseDTO> allCoursesList;
     private static CourseDTO firstCourse;
