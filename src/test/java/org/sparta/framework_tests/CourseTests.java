@@ -5,6 +5,7 @@ import org.sparta.DTOs.CourseDTO;
 import org.sparta.DTOs.DTOEnum;
 import org.sparta.POJOs.CourseListPojos.CourseList;
 import org.sparta.POJOs.CourseListPojos.HATAEOSExtension.CourseSpartanLinks;
+import org.sparta.crud_forms.AddCourseForm;
 import org.sparta.framework.connection.ConnectionManager;
 
 import java.util.List;
@@ -84,19 +85,13 @@ public class CourseTests {
         }
       
         // Once there's a Course DeleteMapping, maybe change the example courseName and description
-        newCourseJson = "{\"courseId\":\""+ allCoursesList.size() + 1 +"\"," +
-                "\"courseName\":\""+ "WeNeedACourseDeleteMapping" +"\"," +
-                "\"length\":"+ 8 +"," +
-                "\"description\":\""+ "WeNeedACourseDeleteMapping" +"\"}" +
-                "\"active\":\""+ true +"\"}";
+        newCourseJson = new AddCourseForm(allCoursesList.size() + 1, "WeNeedACourseDeleteMapping", 8, "WeNeedACourseDeleteMapping", true).getJson();
         sendCoursePostRequest(newCourseJson, putCourseURL);
-        getPutCourseURL = ConnectionManager.makeUrl().getSpecificCourse(allCoursesList.size() + 1);
+        // Also below section of code should likely have allCoursesList.size() + 1 instead,
+        // but that should only be changed once admin layer by devs is complete
+        getPutCourseURL = ConnectionManager.makeUrl().getSpecificCourse(allCoursesList.size());
         putCourse = (CourseDTO) injectDTO(getPutCourseURL, DTOEnum.COURSE);
 
-        courseDTOWrapper = (CourseList) injectDTO(getCourseByName, DTOEnum.COURSE_LIST);
-        if (courseDTOWrapper.getEmbedded()!= null) {
-          courseWithName = courseDTOWrapper.getEmbedded().getCourseDTOList();
-        }
     }
 
     @Nested
@@ -234,8 +229,16 @@ public class CourseTests {
     class PutCourseTests{
 
         @Test
+        @DisplayName("Do we get an error without using an API key?")
+        void doWeGetAnErrorWithoutUsingAnApiKey() {
+            Assertions.assertEquals(400,sendCoursePutRequest(newCourseJson, allCoursesURL).statusCode());
+        }
+
+        @Test
         @DisplayName("Course Id is retrievable")
-        void getCourseIdTest(){Assertions.assertEquals(allCoursesList.size() + 1, putCourse.getCourseId());}
+            // Also below section of code should likely have allCoursesList.size() + 1 instead,
+            // but that should only be changed once admin layer by devs is complete
+        void getCourseIdTest(){Assertions.assertEquals(allCoursesList.size(), putCourse.getCourseId());}
 
         @Test
         @DisplayName("Object id is retrievable")
@@ -335,4 +338,13 @@ public class CourseTests {
         }
     }
 
+    @Nested
+    @DisplayName("POSTing courses")
+    class PosTingCourses {
+        @Test
+        @DisplayName("Do we get an error without using an API key?")
+        void doWeGetAnErrorWithoutUsingAnApiKey() {
+            Assertions.assertEquals(400,sendCoursePostRequest(newCourseJson, allCoursesURL).statusCode());
+        }
+    }
 }
