@@ -39,7 +39,7 @@ public class TraineeStepdefs {
         id = arg0;
     }
 
-    @When("I enter first name {string}")
+    @When("I enter first name of {string}")
     public void iEnterFirstName(String arg0) {
         firstName = arg0;
     }
@@ -79,16 +79,22 @@ public class TraineeStepdefs {
         expected.add(arg3);
         expected.add(arg4);
 
-        System.out.println("Expected Array: " + expected);
+        System.out.println("Expected trainee: " + expected);
 
         ArrayList<String> received = new ArrayList<>();
-        received.add(traineeList.get(traineeList.size()-1).getFirstName());
-        received.add(traineeList.get(traineeList.size()-1).getLastName());
-        received.add(String.valueOf(traineeList.get(traineeList.size()-1).getCourseId()));
-        received.add(traineeList.get(traineeList.size()-1).getCourseStartDate());
-        received.add(traineeList.get(traineeList.size()-1).getCourseEndDate());
 
-        System.out.println("Received array: " + received);
+        for (TraineeDTO trainee : traineeList) {
+            if (trainee.getFirstName().equals(firstName)){
+                received.add(traineeList.get(traineeList.size()-1).getFirstName());
+                received.add(traineeList.get(traineeList.size()-1).getLastName());
+                received.add(String.valueOf(traineeList.get(traineeList.size()-1).getCourseId()));
+                received.add(traineeList.get(traineeList.size()-1).getCourseStartDate());
+                received.add(traineeList.get(traineeList.size()-1).getCourseEndDate());
+            }
+        }
+
+
+        System.out.println("Received trainee: " + received);
 
         for (int i = 0; i < expected.size(); i++) {
             Assertions.assertEquals(received.get(i), expected.get(i));
@@ -141,8 +147,15 @@ public class TraineeStepdefs {
     @Then("I should receive all trainees whose first name contains that")
     public void iShouldReceiveATraineeWithFirstNameOf() {
         TraineeDTOList traineeDTOList = (TraineeDTOList) injectDTO(ConnectionManager.makeUrl().spartan().firstName(firstName).link(), DTOEnum.TRAINEE_LIST);
-        for (TraineeDTO trainee : traineeDTOList.getEmbedded().getSpartanEntityList()) {
-            Assertions.assertEquals(trainee.getFirstName(), firstName);
+
+        if (traineeDTOList.getEmbedded() == null) {
+            System.out.println("There are no trainees whose first name contains " + "\"" + firstName + "\".");
+        } else {
+            System.out.println("Found " + traineeDTOList.getEmbedded().getSpartanEntityList().size() + " trainees:");
+            for (TraineeDTO trainee : traineeDTOList.getEmbedded().getSpartanEntityList()) {
+                Assertions.assertTrue(trainee.getFirstName().contains(firstName));
+                System.out.print(trainee.getFullName() + ", ");
+            }
         }
     }
 
@@ -153,9 +166,29 @@ public class TraineeStepdefs {
 
     @Then("I should receive all trainees whose last name contains that")
     public void iShouldReceiveATraineeWithTheLastNameOf() {
-        TraineeDTOList traineeDTOList = (TraineeDTOList) injectDTO(ConnectionManager.makeUrl().spartan().firstName(firstName).link(), DTOEnum.TRAINEE_LIST);
-        for (TraineeDTO trainee : traineeDTOList.getEmbedded().getSpartanEntityList()) {
-            Assertions.assertEquals(trainee.getLastName(), lastName);
+        TraineeDTOList traineeDTOList = (TraineeDTOList) injectDTO(ConnectionManager.makeUrl().spartan().lastName(lastName).link(), DTOEnum.TRAINEE_LIST);
+        if (traineeDTOList.getEmbedded() == null) {
+            System.out.println("There are no trainees whose last name contains " + "\"" + lastName + "\"." );
+        } else {
+            System.out.println("Found " + traineeDTOList.getEmbedded().getSpartanEntityList().size() + " trainees:");
+            for (TraineeDTO trainee : traineeDTOList.getEmbedded().getSpartanEntityList()) {
+                Assertions.assertTrue(trainee.getLastName().contains(lastName));
+                System.out.print(trainee.getFullName() + ", ");
+            }
+        }
+    }
+
+    @Then("I should receive all trainees whose first and last names contain those")
+    public void iShouldReceiveAllTraineesWhoseFirstAndLastNamesContainThose() {
+        TraineeDTOList traineeDTOList = (TraineeDTOList) injectDTO(ConnectionManager.makeUrl().spartan().firstName(firstName).lastName(lastName).link(), DTOEnum.TRAINEE_LIST);
+        if (traineeDTOList.getEmbedded() == null) {
+            System.out.println("There are no trainees whose name contains " + "\"" + firstName + "\"" + " and last name contains " + "\"" + lastName + "\".");
+        } else {
+            System.out.println("Found " + traineeDTOList.getEmbedded().getSpartanEntityList().size() + " trainees:");
+            for (TraineeDTO trainee : traineeDTOList.getEmbedded().getSpartanEntityList()) {
+                Assertions.assertTrue(trainee.getFirstName().contains(firstName) && trainee.getLastName().contains(lastName));
+                System.out.print(trainee.getFullName() + ", ");
+            }
         }
     }
 
@@ -281,8 +314,36 @@ public class TraineeStepdefs {
         parseDate(arg0);
     }
 
+    @Then("I should receive all trainees that finished on that date")
+    public void iShouldReceiveAllTraineesThatFinishedOnThatDate() {
+        TraineeDTOList traineeDTOList = (TraineeDTOList) injectDTO(ConnectionManager.makeUrl().spartan()
+                .BeforeAfter(UrlBuilder.TimeParameters.NOW)
+                .StartEnd(UrlBuilder.TimeParameters.END)
+                .date(dateQuery.toString()).link(), DTOEnum.TRAINEE_LIST);
 
+        if (traineeDTOList.getEmbedded() == null) {
+            System.out.println("0 trainees finished on " + dateQuery + ".");
+        } else {
+            System.out.println(traineeDTOList.getEmbedded().getSpartanEntityList().size() +  " trainees finished on " + dateQuery + ":");
+            for (TraineeDTO trainee : traineeDTOList.getEmbedded().getSpartanEntityList()) {
+                Assertions.assertEquals(trainee.getEndDateAsDate(), dateQuery);
+                System.out.print(trainee.getFullName() + "(" + trainee.getCourseEndDate() + ")" + ", ");
+            }
+        }
+    }
 
+    @When("I search for id {string}")
+    public void iSearchForId(String arg0) {
+        id = arg0;
+    }
+
+    @Then("I should receive the trainee that matches that id")
+    public void iShouldReceiveTheTraineeThatMatchesThatId() {
+        TraineeDTO trainee = (TraineeDTO) injectDTO(ConnectionManager.makeUrl().getSpecificSpartan(id), DTOEnum.TRAINEE);
+        Assertions.assertEquals(trainee.getId(), id);
+        System.out.println("Trainee found: " + trainee.getFullName() + "(" + trainee.getId() + ")" );
+
+    }
 
     private void parseDate(String arg0) {
         try {
@@ -291,7 +352,4 @@ public class TraineeStepdefs {
             System.err.println("Incorrect date format. Please enter a date in the form \"yyyy-MM-dd\"");
         }
     }
-
-
-
 }
