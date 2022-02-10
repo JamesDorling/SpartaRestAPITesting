@@ -32,4 +32,6 @@ public class Config {
 
     //Getters for the properties
     public static String getApiKey(){ return config.getProperty("api_key"); }
+    public static String getUsername(){ return config.getProperty("username"); }
+    public static String getPassword(){ return config.getProperty("password");}
 }
