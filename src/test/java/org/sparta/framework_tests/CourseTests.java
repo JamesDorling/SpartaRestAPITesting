@@ -91,14 +91,14 @@ public class CourseTests {
       
         // Once there's a Course DeleteMapping, maybe change the example courseName and description
         newCourseJson = new AddCourseForm("WeNeedACourseDeleteMapping", 8, "WeNeedACourseDeleteMapping").getJson();
-        sendCoursePostRequest(newCourseJson, courseWithKeyURL);
+        sendPostRequest(newCourseJson, courseWithKeyURL);
         // Also below section of code should likely have allCoursesList.size() + 1 instead,
         // but that should only be changed once admin layer by devs is complete
         getPostCourseURL = ConnectionManager.makeUrl().getSpecificCourse(allCoursesList.size());
         postCourse = (CourseDTO) injectDTO(getPostCourseURL, DTOEnum.COURSE);
 
         putCourseJson = new UpdateCourseForm("6203d66702673b3a3eccc999", 7, "JavaScript", 8, "Javascript", true).getJson();
-        sendCoursePutRequest(putCourseJson, courseWithKeyURL);
+        sendPutRequest(putCourseJson, courseWithKeyURL);
 
         getPutCourseURL = ConnectionManager.makeUrl().getSpecificCourse(7);
         putCourse = (CourseDTO) injectDTO(getPutCourseURL, DTOEnum.COURSE);
@@ -241,7 +241,7 @@ public class CourseTests {
         @Test
         @DisplayName("Do we get an error without using an API key?")
         void doWeGetAnErrorWithoutUsingAnApiKey() {
-            Assertions.assertEquals(400,sendCoursePutRequest(newCourseJson, allCoursesURL).statusCode());
+            Assertions.assertEquals(400,sendPutRequest(newCourseJson, allCoursesURL).statusCode());
         }
 
         @Test
@@ -380,7 +380,7 @@ public class CourseTests {
         @Test
         @DisplayName("Do we get an error without using an API key?")
         void doWeGetAnErrorWithoutUsingAnApiKey() {
-            Assertions.assertEquals(400,sendCoursePostRequest(newCourseJson, allCoursesURL).statusCode());
+            Assertions.assertEquals(400,sendPostRequest(newCourseJson, allCoursesURL).statusCode());
         }
     }
 }

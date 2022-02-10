@@ -12,8 +12,7 @@ import org.sparta.framework.connection.ConnectionManager;
 
 
 import static org.sparta.framework.Injector.injectDTO;
-import static org.sparta.framework.connection.ConnectionManager.makeUrl;
-import static org.sparta.framework.connection.ConnectionManager.sendTraineePostRequest;
+import static org.sparta.framework.connection.ConnectionManager.*;
 
 public class CourseStepDef {
 
@@ -37,7 +36,7 @@ public class CourseStepDef {
         length = 5;
         active = true;
 
-        courseForm = new AddCourseForm(courseId, courseName, description, length, active);
+        courseForm = new AddCourseForm(courseName, length, description);
     }
 
     @When("I enter a name and length")
@@ -49,13 +48,13 @@ public class CourseStepDef {
 
     @Then("I want to be able to assign trainees to it")
     public void iWantToBeAbleToAssignTraineesToIt() {
-        ConnectionManager.sendCoursePostRequest(courseForm.getCourseJson(), ConnectionManager.makeUrl().getCourseWithKey());
+        sendPostRequest(courseForm.getJson(), ConnectionManager.makeUrl().getCourseWithKey());
 
         firstName = "test";
         lastName = "dummy";
         startDate = "2022-04-15";
         AddTraineeForm newTrainee = new AddTraineeForm(firstName, lastName, courseId, startDate);
-        sendTraineePostRequest(newTrainee.getJson(), makeUrl().getSpartanWithKey());
+        sendPostRequest(newTrainee.getJson(), makeUrl().getSpartanWithKey());
 
         TraineeDTOList traineeDTOList = (TraineeDTOList) injectDTO(ConnectionManager.makeUrl().spartan().courseName("new course").link(), DTOEnum.TRAINEE_LIST);
         Assertions.assertEquals(traineeDTOList.getEmbedded().getSpartanEntityList().get(0).getCourseName(), courseName);
@@ -63,6 +62,6 @@ public class CourseStepDef {
 
     @When("I send a put request to a course endpoint")
     public void iSendAPutRequestToACourseEndpoint() {
-        ConnectionManager.sendCoursePutRequest(courseForm.getCourseJson(), ConnectionManager.makeUrl().getCourseWithKey());
+        ConnectionManager.sendPutRequest(courseForm.getJson(), ConnectionManager.makeUrl().getCourseWithKey());
     }
 }
