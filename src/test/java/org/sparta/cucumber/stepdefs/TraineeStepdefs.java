@@ -135,6 +135,16 @@ public class TraineeStepdefs {
         }
     }
 
+    @And("I send a DELETE request")
+    public void iSendADELETERequest() {
+        sendDeleteRequest(makeUrl().deleteSpartan(id));
+    }
+
+    @Then("The trainee with the matching ID should be removed from the database")
+    public void theTraineeWithTheMatchingIDShouldBeRemovedFromTheDatabase() {
+        Assertions.assertNull(injectDTO(makeUrl().getSpecificSpartan(id), DTOEnum.TRAINEE));
+    }
+
     @When("I search for first name {string}")
     public void iSearchForFirstName(String arg0) {
         firstName = arg0;
