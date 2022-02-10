@@ -1,6 +1,6 @@
 # Testing Framework for Sparta Database API
 
-### A Sparta Global java engineer course project.
+### A project for the Sparta Global java engineering course.
 
 SpartaRestAPITesting is a testing framework for the Sparta Rest API.
 
@@ -10,7 +10,16 @@ SpartaRestAPITesting is a testing framework for the Sparta Rest API.
 * - [Trainee](#TraineeDTO)
 * - [Course](#CourseDTO) 
 * - [Lists](#DTO-Lists) <br> <br>
-* [Crud Forms](#CRUD-Forms) 
+* [Crud Forms](#CRUD-Forms) <br> <br>  
+* [Connecting](#Connecting)
+* - [Building a Url](#Url-Builder)
+* - [Getting a Response](#Connection-Manager)
+<br> <br>
+* [Injecting Data](#Injector)
+<br> <br>
+* [Extending The Framework](#Extending-The-Framework)
+* -
+<br> <br>
 * [Contributors](#Contributors)
 
 
@@ -51,16 +60,40 @@ This DTO also contains simple boolean methods for returning whether or not a val
 Both DTOs have respective list objects as well. These lists are used to transfer all objects of that type.
 
 ##CRUD Forms
-These forms are used to construct Jsons for use in performing CRUD operations
+These classes are used to construct Jsons for use in performing CRUD operations
+
+##Connecting
+
+###Url Builder
+The url builder is used by the Connection Manager to build urls. It allows the tester to navigate to Spartans and Courses pages 
+and add the parameters that the API utilizes. 
+
+###Connection Manager
+The connection manager is used for constructing the url, receiving HttpResponses, and sending Http requests.
+The send requests functions take in a Json, created by a CRUD Form, and a string url in order to perform a CRUD operation.
+
+##Injector
+This class contains functions for Object Mapping through a url or a stub.
+The function InjectDTO does not give functionality for mapping through a stub, to map through a stub use the InjectDTOFromFile function.
+
+##Extending The Framework
+If a tester/engineer wishes to extend the framework, for example: adding training complexes, they will need to do the following.
+- A newly created DTO needs to implement the DTO interface
+- A new field needs to be added to the DTOEnum to include the newly created object
+- The injectDTO and InjectDTOFromFile functions within the Injector class need to have a new case statement within the switch statements for the new object.
+
+
+
 
 ## Contributors
 ###Sparta Rest API Scrum Master
 Harry Jones
 ###Testing Framework lead
 James Dorling<br>
-###Mooks
+###Additional Engineers
 Louis Clement-Harris<br>
 Callum Davis-Keogh<br>
-Reshman Siva<br>
+Michael Makam <br>
 Tony Parsons <br>
-Melvin Thomas
+Reshman Siva<br>
+Melvin Thomas 
