@@ -15,7 +15,8 @@ import org.sparta.framework.connection.ConnectionManager;
 import java.util.Objects;
 
 import static org.sparta.framework.Injector.injectDTO;
-import static org.sparta.framework.connection.ConnectionManager.*;
+import static org.sparta.framework.connection.ConnectionManager.makeUrl;
+import static org.sparta.framework.connection.ConnectionManager.sendPostRequest;
 
 public class CourseStepDef {
 

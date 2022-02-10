@@ -15,6 +15,7 @@ import org.sparta.crud_forms.UpdateTraineeForm;
 import org.sparta.framework.connection.ConnectionManager;
 import org.sparta.framework.connection.UrlBuilder;
 
+import java.io.FileNotFoundException;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
@@ -26,7 +27,6 @@ import static org.sparta.framework.connection.ConnectionManager.*;
 public class TraineeStepdefs {
 
     private static final TraineeDTOList traineeDTOList = (TraineeDTOList) injectDTO(ConnectionManager.makeUrl().spartan().link(), DTOEnum.TRAINEE_LIST);
-    private static List<TraineeDTO> traineeList = traineeDTOList.getEmbedded().getSpartanEntityList();
 
     private String id;
     private String firstName;
@@ -73,7 +73,7 @@ public class TraineeStepdefs {
     public void aTraineeShouldBeCreatedWithTheNameACourseIDOfAStartDateOfAndAnEndDateOf(String arg0, String arg1, int arg2, String arg3, String arg4) {
 
         TraineeDTOList traineeDTOList = (TraineeDTOList) injectDTO(ConnectionManager.makeUrl().spartan().link(), DTOEnum.TRAINEE_LIST);
-        traineeList = traineeDTOList.getEmbedded().getSpartanEntityList();
+        List<TraineeDTO> traineeList = traineeDTOList.getEmbedded().getSpartanEntityList();
 
         ArrayList<String> expected = new ArrayList<>();
         expected.add(arg0);
@@ -138,14 +138,20 @@ public class TraineeStepdefs {
         }
     }
 
+    @When("I create a new trainee with dummy values")
+    public void iCreateANewTraineeWithDummyValues() {
+        String[] response = sendPostRequest(new AddTraineeForm("dummy", "dummy", 1, "2023-01-01").getJson(), makeUrl().getSpartanWithKey()).body().split(",");
+        id = response[0].split(":")[1].replace("\"", "");
+    }
+
     @And("I send a DELETE request")
     public void iSendADELETERequest() {
         sendDeleteRequest(makeUrl().deleteSpartan(id));
     }
 
-    @Then("The trainee with the matching ID should be removed from the database")
+    @Then("The dummy trainee should be removed from the database")
     public void theTraineeWithTheMatchingIDShouldBeRemovedFromTheDatabase() {
-        Assertions.assertNull(injectDTO(makeUrl().getSpecificSpartan(id), DTOEnum.TRAINEE));
+        Assertions.assertEquals(404, getStatusCode(makeUrl().getSpecificSpartan(id)));
     }
 
     @When("I search for first name {string}")
@@ -360,7 +366,7 @@ public class TraineeStepdefs {
             System.err.println("Incorrect date format. Please enter a date in the form \"yyyy-MM-dd\"");
         }
     }
-
+  
     @Given("I have an API key")
     public void iHaveAnAPIKey() {
         Assumptions.assumeTrue(Config.getApiKey() != null);
