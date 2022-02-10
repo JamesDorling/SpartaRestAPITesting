@@ -75,6 +75,12 @@ public class ConnectionManager {
         return sendRequest(httpRequest);
     }
 
+    public static HttpResponse<String> sendCoursePutRequest(String newCourseJson, String url) {
+        HttpRequest httpRequest = HttpRequest.newBuilder().uri(URI.create(url)).PUT(HttpRequest.BodyPublishers
+                .ofString(newCourseJson)).header("Content-Type", "application/json").build();
+        return sendRequest(httpRequest);
+    }
+
     public static HttpResponse<String> sendDeleteRequest(String url) {
         HttpRequest httpRequest = HttpRequest.newBuilder().uri(URI.create(url)).DELETE().build();
         return sendRequest(httpRequest);
