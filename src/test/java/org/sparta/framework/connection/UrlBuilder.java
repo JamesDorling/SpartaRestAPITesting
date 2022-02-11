@@ -68,6 +68,11 @@ public class UrlBuilder {
         return this;
     }
 
+    public UrlBuilder active(boolean active) {
+        link.append("active=").append(active);
+        return this;
+    }
+
     public UrlBuilder searchByDate(TimeParameters BeforeOrAfter, TimeParameters StartOrEnd, String date) {
         return this.BeforeAfter(BeforeOrAfter).StartEnd(StartOrEnd).date(date);
     }
