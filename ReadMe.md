@@ -4,7 +4,11 @@
 
 SpartaRestAPITesting is a testing framework for the Sparta Rest API.
 
-## Table of contents
+<!--                                                                                     branch  -->
+<!--![Sparta-Global](https://raw.githubusercontent.com/JamesDorling/SpartaRestAPITesting/main/images/Sparta-Global.png) --->
+![Sparta-Global](images/Sparta-Global.png)
+
+## Contents
 * [Setup](#Using-the-Framework) <br> <br>
 * [DTOs](#Data-Transfer-Objects)
 * - [Trainee](#TraineeDTO)
@@ -18,7 +22,6 @@ SpartaRestAPITesting is a testing framework for the Sparta Rest API.
 * [Injecting Data](#Injector)
 <br> <br>
 * [Extending The Framework](#Extending-The-Framework)
-* -
 <br> <br>
 * [Contributors](#Contributors)
 
@@ -46,31 +49,114 @@ All DTOs implement the DTO interface, which is empty, for the purpose of depende
 
 Extending the basic POJO for the Trainee, the trainee DTO has a host of functionality for the tester. <br>
 - Simple boolean methods for returning whether or not a value is null, there is also a function that checks for any data values being null.
-- Returning the full name of a trainee
+- Returning the full name of a trainee 
 - Returning each start and end dates as a LocalDate
-- Functionality for checking that the start date is before the end date and the end date is after the start date
+- Functionality for checking that the start date is before the end date and the end date is after the start date <br>
+
+
+    public String getFullName() {
+        return getFirstName() + " " + getLastName();
+    }
+
+    public LocalDate getStartDateAsDate() {
+        return LocalDate.parse(getCourseStartDate());
+    }
+    public LocalDate getEndDateAsDate() {
+        return LocalDate.parse(getCourseEndDate());
+    }
+
+    public boolean startIsBefore(LocalDate date);
+    public boolean startIsAfter(LocalDate date);
+    public boolean endIsBefore(LocalDate date);
+    public boolean endIsAfter(LocalDate date);
+
+    public boolean firstNameIsNotNull();
+    public boolean lastNameIsNotNull();
+    public boolean startDateIsNotNull();
+    public boolean endDateIsNotNull();
+    public boolean idIsNotNull();
+    public boolean courseIdIsNotNull();
+
+    public boolean noDataIsNull();
+
+    public boolean startIsBeforeEnd();
+    public boolean endIsAfterStart(); 
+  
+
 - Functionality for getting the courseId and returning the name of the corresponding course
 - Functionality for returning the trainee as a Json
+
+      public String getCourseName();
+      public String getTraineeAsJson();
+
 
 ###CourseDTO
 This DTO also contains simple boolean methods for returning whether or not a value is null, as well as a method checking if any value is null 
 
+    public boolean idIsNotNull();
+    public boolean courseIdIsNotNull();
+    public boolean courseNameIsNotNull();
+    public boolean lengthIsNotNull();
+    public boolean descriptionIsNotNull();
+    public boolean isActiveIsNotNull();
+    public boolean linksIsNotNull();
+
 ###DTO Lists
 
-Both DTOs have respective list objects as well. These lists are used to transfer all objects of that type.
+Both DTOs have respective list objects as well. These lists are used to handle all objects of that type. <br>
+The list DTOs themselves are empty. The classes are only there to covert their POJO parent classes into DTOs. 
 
 ##CRUD Forms
-These classes are used to construct Jsons for use in performing CRUD operations
+These classes are used to construct Jsons for use in performing CRUD operations. <br>
+
+    //Constructs the Json required to peform the CRUD operation of the classes name sake
+    public AddCourseForm(String courseName, int length, String description);
+    public AddTraineeForm(String firstName, String lastName, Integer courseId, String startDate);
+    public UpdateCourseForm(String id, Integer courseId, String courseName, Integer length, String description, boolean active)
+    public UpdateTraineeForm(String id, String firstName, String lastName, Integer courseId, String startDate)
 
 ##Connecting
 
 ###Url Builder
-The url builder is used by the Connection Manager to build urls. It allows the tester to navigate to Spartans and Courses pages 
-and add the parameters that the API utilizes. 
+The url builder is used by the Connection Manager to build urls. It allows the tester to navigate to the Spartans and Courses pages 
+using the following functions:
+    
+    //These methods append the baseUrl to navigate to their respective pages
+    public UrlBuilder spartan(); 
+    public UrlBuilder course();
+
+There are functions that append the baseUrl link to allow for navigation to specific entries within the page:
+
+    public String getSpecificSpartan(String id);
+    public String getSpecificCourse(Integer id);
+
+Testers are also able to navigate to pages with their API Key:
+
+    public String getSpartanWithKey();
+    public String getCourseWithKey();
+
+The UrlBuilder is also capable of appending the link with the parameters that the API provides
+
+####Trainee
+
+    public UrlBuilder firstName(String name);
+    public UrlBuilder lastName(String name);
+    public UrlBuilder courseId(Integer id);
+    public UrlBuilder date(String date);
+    public UrlBuilder courseName(String course);
+    public UrlBuilder length(String length);
+
+As the trainee has start and end date parameters 
 
 ###Connection Manager
-The connection manager is used for constructing the url, receiving HttpResponses, and sending Http requests.
-The send requests functions take in a Json, created by a CRUD Form, and a string url in order to perform a CRUD operation.
+The connection manager is used for fetching the url, receiving HttpResponses, and sending Http requests.
+The send requests functions take in a String(Json), created by a CRUD Form, and a string url in order to perform a CRUD operation.
+
+Example:
+
+    ConnectionManager.makeUrl().spartan().link()
+
+This line of code returns the link to the Spartan
 
 ##Injector
 This class contains functions for Object Mapping through a url or a stub.

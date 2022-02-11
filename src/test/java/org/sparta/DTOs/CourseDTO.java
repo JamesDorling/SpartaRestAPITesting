@@ -11,6 +11,4 @@ public class CourseDTO extends CoursePojo implements DTO {
     public boolean descriptionIsNotNull() {return getDescription() != null;}
     public boolean isActiveIsNotNull() {return isIsActive() != null;}
     public boolean linksIsNotNull() {return getLinks() != null;}
-
-    public boolean noDataIsNull() {return idIsNotNull() && courseIdIsNotNull() && courseNameIsNotNull() && courseNameIsNotNull() && lengthIsNotNull() && descriptionIsNotNull() && isActiveIsNotNull() && linksIsNotNull();}
 }
