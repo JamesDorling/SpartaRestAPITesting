@@ -21,7 +21,7 @@ public class CourseTests {
 
     private static final String allCoursesURL = ConnectionManager.makeUrl().course().link();
     private static List<CourseDTO> allCoursesList;
-    private static CourseDTO firstCourse;
+
     private static CourseDTO devOpsCourse;
     private static CourseDTO id2Course;
 
@@ -35,7 +35,7 @@ public class CourseTests {
     private static final String getAllInactiveCoursesURL = ConnectionManager.makeUrl().getAllInactiveCourses();
     private static List<CourseDTO> allInactiveCoursesList;
 
-    private static final String courseWithKeyURL = ConnectionManager.makeUrl().getCourseWithKey() + adminKey;
+    private static final String courseWithKeyURL = ConnectionManager.makeUrl().courseWithAdminKey();
     private static CourseDTO postCourse;
     private static String newCourseJson;
     private static String getPostCourseURL;
@@ -92,17 +92,15 @@ public class CourseTests {
         }
       
         // Once there's a Course DeleteMapping, maybe change the example courseName and description
-        newCourseJson = new AddCourseForm("WeNeedACourseDeleteMapping", 8, "WeNeedACourseDeleteMapping").getJson();
+        newCourseJson = new AddCourseForm("Go", 8, "Go").getJson();
         sendPostRequest(newCourseJson, courseWithKeyURL);
-        // Also below section of code should likely have allCoursesList.size() + 1 instead,
-        // but that should only be changed once admin layer by devs is complete
-        getPostCourseURL = ConnectionManager.makeUrl().getSpecificCourse(allCoursesList.size()) + adminKey;
+        getPostCourseURL = ConnectionManager.makeUrl().getSpecificCourse(allCoursesList.size() + 1);
         postCourse = (CourseDTO) injectDTO(getPostCourseURL, DTOEnum.COURSE);
 
-        putCourseJson = new UpdateCourseForm("6203d66702673b3a3eccc999", 7, "JavaScript", 8, "Javascript", true).getJson();
+        putCourseJson = new UpdateCourseForm("6203d66702673b3a3eccc999", 7, "JavaScript", 9, "Javascript", false).getJson();
         sendPutRequest(putCourseJson, courseWithKeyURL);
 
-        getPutCourseURL = ConnectionManager.makeUrl().getSpecificCourse(7) + adminKey;
+        getPutCourseURL = ConnectionManager.makeUrl().getSpecificCourse(7);
         putCourse = (CourseDTO) injectDTO(getPutCourseURL, DTOEnum.COURSE);
 
     }
@@ -244,14 +242,13 @@ public class CourseTests {
         @Test
         @DisplayName("Do we get an error without using an API key?")
         void doWeGetAnErrorWithoutUsingAnApiKey() {
-            Assertions.assertEquals(400,sendPutRequest(newCourseJson, allCoursesURL).statusCode());
+            Assertions.assertEquals(405,sendPutRequest(newCourseJson, allCoursesURL).statusCode());
         }
 
         @Test
         @DisplayName("Course Id is retrievable")
-            // Also below section of code should likely have allCoursesList.size() + 1 instead,
-            // but that should only be changed once admin layer by devs is complete
-        void getCourseIdTest(){Assertions.assertEquals(allCoursesList.size(), postCourse.getCourseId());}
+            // Also below section of code should likely have allCoursesList.size() + 1 instead
+        void getCourseIdTest(){Assertions.assertEquals(allCoursesList.size() + 1, postCourse.getCourseId());}
 
         @Test
         @DisplayName("Object id is retrievable")
@@ -310,6 +307,7 @@ public class CourseTests {
         @Test
         @DisplayName("Successful Connection Test Inactive")
         void connectionCode200TestInactive() {
+            Assumptions.assumeFalse(allInactiveCoursesList == null);
             Assertions.assertEquals(200, getStatusCode(getAllInactiveCoursesURL));
         }
 
