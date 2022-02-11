@@ -15,9 +15,8 @@ import java.util.Objects;
 import static org.sparta.framework.Injector.injectDTO;
 import static org.sparta.framework.connection.ConnectionManager.*;
 
+@TestMethodOrder(value = MethodOrderer.OrderAnnotation.class)
 public class CourseTests {
-
-    private static final String adminKey = getAdminKey();
 
     private static final String allCoursesURL = ConnectionManager.makeUrl().course().link();
     private static List<CourseDTO> allCoursesList;
@@ -105,6 +104,7 @@ public class CourseTests {
     }
 
     @Nested
+    @Order(value = 1)
     @DisplayName("Checking injecting data to a DTO")
     class InjectingToDTOTests {
 
@@ -152,6 +152,7 @@ public class CourseTests {
     }
 
     @Nested
+    @Order(value = 1)
     @DisplayName("Do we get expected values from a get all request?")
     class GetAllCoursesTests {
 
@@ -183,6 +184,7 @@ public class CourseTests {
     }
 
     @Nested
+    @Order(value = 1)
     @DisplayName("Do we get expected values from a get by id request?")
     class GetCourseByIDTests{
 
@@ -235,6 +237,7 @@ public class CourseTests {
     }
 
     @Nested
+    @Order(value = 2)
     @DisplayName("Testing to see if post function works properly")
     class PostCourseTests {
 
@@ -267,6 +270,7 @@ public class CourseTests {
     }
 
     @Nested
+    @Order(value = 3)
     @DisplayName("Does using put function update course properly?")
     class PutCourseTests {
         @Test
@@ -293,6 +297,19 @@ public class CourseTests {
     }
 
     @Nested
+    @Order(value = 4)
+    @DisplayName("Does delete function update course properly?")
+    class DeleteCourseTests {
+        @Test
+        @DisplayName("Delete last entry")
+        void deleteFunction() {
+            String getDeleteCourseURL = ConnectionManager.makeUrl().courseWithAdminKey(allCoursesList.size());
+            System.out.println(sendDeleteRequest(getDeleteCourseURL));
+        }
+    }
+
+    @Nested
+    @Order(value = 1)
     @DisplayName("Testing getting all active/inactive courses")
     class TestingGettingAllActiveInactiveCourses {
 
@@ -329,6 +346,7 @@ public class CourseTests {
     }
 
     @Nested
+    @Order(value = 1)
     @DisplayName("Test searching for courses by name")
     class TestSearchingForCoursesByName {
 
@@ -374,6 +392,7 @@ public class CourseTests {
     }
 
     @Nested
+    @Order(value = 1)
     @DisplayName("POSTing courses")
     class PostingCourses {
         @Test
