@@ -5,8 +5,8 @@
 SpartaRestAPITesting is a testing framework for the Sparta Rest API.
 
 <!--                                                                                     branch  -->
-<!--![Sparta-Global](https://raw.githubusercontent.com/JamesDorling/SpartaRestAPITesting/main/src/images/Sparta-Global.png) --->
-![Sparta-Global](src/images/Sparta-Global.png)
+[Sparta-Global](https://raw.githubusercontent.com/JamesDorling/SpartaRestAPITesting/main/src/test/resources/Sparta-Global.png)
+<!--![Sparta-Global](src/test/resources/images/Sparta-Global.png) --->
 
 ## Contents
 * [Setup](#Using-the-Framework) <br> <br>
@@ -42,28 +42,26 @@ This property is retrieved programmatically via the Config class and is used in 
 - api_key=[Your API Key]
 
 
-##Data Transfer Objects
+## Data Transfer Objects
 All DTOs implement the DTO interface, which is empty, for the purpose of dependency inversion.
 
-###TraineeDTO
+### TraineeDTO
 
 Extending the basic POJO for the Trainee, the trainee DTO has a host of functionality for the tester. <br>
 - Simple boolean methods for returning whether or not a value is null, there is also a function that checks for any data values being null.
 - Returning the full name of a trainee 
 - Returning each start and end dates as a LocalDate
+- Functionality for checking that start and end dates are before or after a given date
 - Functionality for checking that the start date is before the end date and the end date is after the start date <br>
+- Functionality for getting the courseId and returning the name of the corresponding course
+- Functionality for returning the trainee as a Json
 
 
-    public String getFullName() {
-        return getFirstName() + " " + getLastName();
-    }
 
-    public LocalDate getStartDateAsDate() {
-        return LocalDate.parse(getCourseStartDate());
-    }
-    public LocalDate getEndDateAsDate() {
-        return LocalDate.parse(getCourseEndDate());
-    }
+    public String getFullName();
+
+    public LocalDate getStartDateAsDate();
+    public LocalDate getEndDateAsDate();
 
     public boolean startIsBefore(LocalDate date);
     public boolean startIsAfter(LocalDate date);
@@ -80,17 +78,16 @@ Extending the basic POJO for the Trainee, the trainee DTO has a host of function
     public boolean noDataIsNull();
 
     public boolean startIsBeforeEnd();
-    public boolean endIsAfterStart(); 
-  
-
-- Functionality for getting the courseId and returning the name of the corresponding course
-- Functionality for returning the trainee as a Json
-
-      public String getCourseName();
-      public String getTraineeAsJson();
+    public boolean endIsAfterStart();
+    public String getCourseName();
+    public String getTraineeAsJson();
 
 
-###CourseDTO
+
+
+
+
+### CourseDTO
 This DTO also contains simple boolean methods for returning whether or not a value is null, as well as a method checking if any value is null 
 
     public boolean idIsNotNull();
@@ -101,12 +98,12 @@ This DTO also contains simple boolean methods for returning whether or not a val
     public boolean isActiveIsNotNull();
     public boolean linksIsNotNull();
 
-###DTO Lists
+### DTO Lists
 
 Both DTOs have respective list objects as well. These lists are used to handle all objects of that type. <br>
 The list DTOs themselves are empty. The classes are only there to covert their POJO parent classes into DTOs. 
 
-##CRUD Forms
+## CRUD Forms
 These classes are used to construct Jsons for use in performing CRUD operations. <br>
 
     //Constructs the Json required to peform the CRUD operation of the classes name sake
@@ -115,9 +112,9 @@ These classes are used to construct Jsons for use in performing CRUD operations.
     public UpdateCourseForm(String id, Integer courseId, String courseName, Integer length, String description, boolean active)
     public UpdateTraineeForm(String id, String firstName, String lastName, Integer courseId, String startDate)
 
-##Connecting
+## Connecting
 
-###Url Builder
+### Url Builder
 The url builder is used by the Connection Manager to build urls. It allows the tester to navigate to the Spartans and Courses pages 
 using the following functions:
     
@@ -137,7 +134,7 @@ Testers are also able to navigate to pages with their API Key:
 
 The UrlBuilder is also capable of appending the link with the parameters that the API provides
 
-####Trainee
+#### Trainee
 
     public UrlBuilder firstName(String name);
     public UrlBuilder lastName(String name);
@@ -146,37 +143,70 @@ The UrlBuilder is also capable of appending the link with the parameters that th
     public UrlBuilder courseName(String course);
     public UrlBuilder length(String length);
 
-As the trainee has start and end date parameters 
+    //                              BEFORE, AFTER, SAME
+    public UrlBuilder BeforeAfter(TimeParameters parameter)
+    //                                 START, END
+    public UrlBuilder StartEnd(TimeParameters parameter);
 
-###Connection Manager
+    public UrlBuilder searchByDate(TimeParameters BeforeOrAfter, TimeParameters StartOrEnd, String date);
+
+The UrlBuilder is also capable of deleting trainees.
+
+    public String deleteSpartan(String id);
+
+#### Course
+
+    public UrlBuilder active(boolean active);
+    public String getAllActiveCourses();
+    public String getAllInactiveCourses();
+
+### Connection Manager
 The connection manager is used for fetching the url, receiving HttpResponses, and sending Http requests.
 The send requests functions take in a String(Json), created by a CRUD Form, and a string url in order to perform a CRUD operation.
 
-Example:
+#### Responses
 
-    ConnectionManager.makeUrl().spartan().link()
+    public static String getURL();
+    public static String getConnection();
+    public static UrlBuilder makeUrl();
+    public static int getStatusCode();
+    public static int getStatusCode(String url);
+    private static HttpResponse<String> getResponse(String url);
+    //Gets response from /spartans
+    private static HttpResponse<String> getResponse();
+    private static HttpResponse<String> receiveResponse(String url);
 
-This line of code returns the link to the Spartan
+#### CRUD Requests
 
-##Injector
+    public static HttpResponse<String> sendPostRequest(String newJson, String url);
+    public static HttpResponse<String> sendPutRequest(String newJson, String url);
+    public static HttpResponse<String> sendDeleteRequest(String url);
+
+## Injector
 This class contains functions for Object Mapping through a url or a stub.
 The function InjectDTO does not give functionality for mapping through a stub, to map through a stub use the InjectDTOFromFile function.
 
-##Extending The Framework
+    public static DTO injectDTO(String URL, DTOEnum dtoType);
+    public static DTO injectDTOFromFile(String file, DTOEnum dtoType);
+
+## Extending The Framework
+### Requirements
 If a tester/engineer wishes to extend the framework, for example: adding training complexes, they will need to do the following.
 - A newly created DTO needs to implement the DTO interface
 - A new field needs to be added to the DTOEnum to include the newly created object
 - The injectDTO and InjectDTOFromFile functions within the Injector class need to have a new case statement within the switch statements for the new object.
 
-
+### Recommendations
+- Update the UrlBuilder with functions that append the base link with the desired page as well as any parameters
+- Create CRUD form classes within the crud_forms package
 
 
 ## Contributors
-###Sparta Rest API Scrum Master
+### Sparta Rest API Scrum Master
 Harry Jones
-###Testing Framework lead
+### Testing Framework lead
 James Dorling<br>
-###Additional Engineers
+### Additional Engineers
 Louis Clement-Harris<br>
 Callum Davis-Keogh<br>
 Michael Makam <br>
