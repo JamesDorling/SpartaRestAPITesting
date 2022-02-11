@@ -35,7 +35,7 @@ Feature: Just getting all the user stories down off the Jira so stepdefs can be 
 #    When I send a put request
 #    Then I should be able to update a trainee's end date
 #
-#    When I send a DELETE request with an employee ID
+#    When I send a DELETE request with a trainee's ID
 #    Then The trainee should be deleted from the database
 
 
