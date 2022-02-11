@@ -42,10 +42,10 @@ This property is retrieved programmatically via the Config class and is used in 
 - api_key=[Your API Key]
 
 
-##Data Transfer Objects
+## Data Transfer Objects
 All DTOs implement the DTO interface, which is empty, for the purpose of dependency inversion.
 
-###TraineeDTO
+### TraineeDTO
 
 Extending the basic POJO for the Trainee, the trainee DTO has a host of functionality for the tester. <br>
 - Simple boolean methods for returning whether or not a value is null, there is also a function that checks for any data values being null.
@@ -90,7 +90,7 @@ Extending the basic POJO for the Trainee, the trainee DTO has a host of function
       public String getTraineeAsJson();
 
 
-###CourseDTO
+### CourseDTO
 This DTO also contains simple boolean methods for returning whether or not a value is null, as well as a method checking if any value is null 
 
     public boolean idIsNotNull();
@@ -101,12 +101,12 @@ This DTO also contains simple boolean methods for returning whether or not a val
     public boolean isActiveIsNotNull();
     public boolean linksIsNotNull();
 
-###DTO Lists
+### DTO Lists
 
 Both DTOs have respective list objects as well. These lists are used to handle all objects of that type. <br>
 The list DTOs themselves are empty. The classes are only there to covert their POJO parent classes into DTOs. 
 
-##CRUD Forms
+## CRUD Forms
 These classes are used to construct Jsons for use in performing CRUD operations. <br>
 
     //Constructs the Json required to peform the CRUD operation of the classes name sake
@@ -115,9 +115,9 @@ These classes are used to construct Jsons for use in performing CRUD operations.
     public UpdateCourseForm(String id, Integer courseId, String courseName, Integer length, String description, boolean active)
     public UpdateTraineeForm(String id, String firstName, String lastName, Integer courseId, String startDate)
 
-##Connecting
+## Connecting
 
-###Url Builder
+### Url Builder
 The url builder is used by the Connection Manager to build urls. It allows the tester to navigate to the Spartans and Courses pages 
 using the following functions:
     
@@ -137,7 +137,7 @@ Testers are also able to navigate to pages with their API Key:
 
 The UrlBuilder is also capable of appending the link with the parameters that the API provides
 
-####Trainee
+#### Trainee
 
     public UrlBuilder firstName(String name);
     public UrlBuilder lastName(String name);
@@ -148,7 +148,7 @@ The UrlBuilder is also capable of appending the link with the parameters that th
 
 As the trainee has start and end date parameters 
 
-###Connection Manager
+### Connection Manager
 The connection manager is used for fetching the url, receiving HttpResponses, and sending Http requests.
 The send requests functions take in a String(Json), created by a CRUD Form, and a string url in order to perform a CRUD operation.
 
@@ -158,11 +158,11 @@ Example:
 
 This line of code returns the link to the Spartan
 
-##Injector
+## Injector
 This class contains functions for Object Mapping through a url or a stub.
 The function InjectDTO does not give functionality for mapping through a stub, to map through a stub use the InjectDTOFromFile function.
 
-##Extending The Framework
+## Extending The Framework
 If a tester/engineer wishes to extend the framework, for example: adding training complexes, they will need to do the following.
 - A newly created DTO needs to implement the DTO interface
 - A new field needs to be added to the DTOEnum to include the newly created object
@@ -172,11 +172,11 @@ If a tester/engineer wishes to extend the framework, for example: adding trainin
 
 
 ## Contributors
-###Sparta Rest API Scrum Master
+### Sparta Rest API Scrum Master
 Harry Jones
-###Testing Framework lead
+### Testing Framework lead
 James Dorling<br>
-###Additional Engineers
+### Additional Engineers
 Louis Clement-Harris<br>
 Callum Davis-Keogh<br>
 Michael Makam <br>
