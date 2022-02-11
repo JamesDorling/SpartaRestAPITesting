@@ -1,0 +1,10 @@
+{
+  "_id": {
+    "$oid": "620133dbb76917a6dcd28f17"
+  },
+  "course_id": 6,
+  "course_name": "Business",
+  "length": 5,
+  "isActive": true,
+  "description": "Business"
+}

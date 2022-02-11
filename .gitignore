@@ -4,6 +4,9 @@
 # Log file
 *.log
 
+# Properties Files
+*.properties
+
 # Package Files #
 *.jar
 *.war
