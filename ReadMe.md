@@ -5,7 +5,7 @@
 SpartaRestAPITesting is a testing framework for the Sparta Rest API.
 
 <!--                                                                                     branch  -->
-[Sparta-Global](https://raw.githubusercontent.com/JamesDorling/SpartaRestAPITesting/main/src/test/resources/Sparta-Global.png)
+<!--[Sparta-Global](https://raw.githubusercontent.com/JamesDorling/SpartaRestAPITesting/main/src/test/resources/Sparta-Global.png) --?
 <!--![Sparta-Global](src/test/resources/images/Sparta-Global.png) --->
 
 ## Contents
@@ -56,7 +56,7 @@ Extending the basic POJO for the Trainee, the trainee DTO has a host of function
 - Functionality for getting the courseId and returning the name of the corresponding course
 - Functionality for returning the trainee as a Json
 
-
+-
 
     public String getFullName();
 
