@@ -15,8 +15,7 @@ import org.sparta.framework.connection.ConnectionManager;
 import java.util.Objects;
 
 import static org.sparta.framework.Injector.injectDTO;
-import static org.sparta.framework.connection.ConnectionManager.makeUrl;
-import static org.sparta.framework.connection.ConnectionManager.sendPostRequest;
+import static org.sparta.framework.connection.ConnectionManager.*;
 
 public class CourseStepDef {
 
@@ -72,7 +71,7 @@ public class CourseStepDef {
 
     @When("I send a put request to a course endpoint")
     public void iSendAPutRequestToACourseEndpoint() {
-        ConnectionManager.sendPutRequest(courseForm.getJson(), ConnectionManager.makeUrl().getCourseWithKey());
+        sendPutRequest(courseForm.getJson(), ConnectionManager.makeUrl().getCourseWithKey());
     }
 
     //Then I should be able to update the course length
