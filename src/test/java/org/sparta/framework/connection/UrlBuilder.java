@@ -73,6 +73,10 @@ public class UrlBuilder {
     public String courseWithAdminKey() {
         return link.append("/courses/").append(getAdminKey()).toString();
     }
+
+    public String courseWithAdminKey(Integer num) {
+        return link.append("/courses/").append(num).append("/").append(getAdminKey()).toString();
+    }
   
     public UrlBuilder active(boolean active) {
         link.append("active=").append(active);
