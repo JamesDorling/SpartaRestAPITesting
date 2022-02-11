@@ -2,6 +2,8 @@ package org.sparta.framework.connection;
 
 import org.sparta.config.Config;
 
+import static org.sparta.framework.connection.ConnectionManager.getAdminKey;
+
 public class UrlBuilder {
     private final StringBuilder link;
 
@@ -108,7 +110,7 @@ public class UrlBuilder {
         return link.toString();
     }
 
-    public UrlBuilder getAdminKey(){
+    public UrlBuilder appendLogin(){
         link.append("/login");
         return this;
     }
