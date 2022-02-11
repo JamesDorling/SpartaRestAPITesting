@@ -90,14 +90,13 @@ public class CourseTests {
             courseDTOWrapper = (CourseList) injectDTO(getCourseByPartialName, DTOEnum.COURSE_LIST);
             courseWithPartialName = courseDTOWrapper.getEmbedded().getCourseDTOList();
         }
-      
-        // Once there's a Course DeleteMapping, maybe change the example courseName and description
-        newCourseJson = new AddCourseForm("Go", 8, "Go").getJson();
+
+        newCourseJson = new AddCourseForm("NewTestCourse", 8, "NewTestCourse").getJson();
         sendPostRequest(newCourseJson, courseWithKeyURL);
         getPostCourseURL = ConnectionManager.makeUrl().getSpecificCourse(allCoursesList.size() + 1);
         postCourse = (CourseDTO) injectDTO(getPostCourseURL, DTOEnum.COURSE);
 
-        putCourseJson = new UpdateCourseForm("6203d66702673b3a3eccc999", 7, "JavaScript", 9, "Javascript", false).getJson();
+        putCourseJson = new UpdateCourseForm("6203d66702673b3a3eccc999", 7, "UpdateTestCourseName", 8, "UpdateTestCourseName", true).getJson();
         sendPutRequest(putCourseJson, courseWithKeyURL);
 
         getPutCourseURL = ConnectionManager.makeUrl().getSpecificCourse(7);
@@ -247,7 +246,6 @@ public class CourseTests {
 
         @Test
         @DisplayName("Course Id is retrievable")
-            // Also below section of code should likely have allCoursesList.size() + 1 instead
         void getCourseIdTest(){Assertions.assertEquals(allCoursesList.size() + 1, postCourse.getCourseId());}
 
         @Test
@@ -257,7 +255,7 @@ public class CourseTests {
 
         @Test
         @DisplayName("Course name is retrievable")
-        void getCourseNameTest(){Assertions.assertEquals("WeNeedACourseDeleteMapping", postCourse.getCourseName());}
+        void getCourseNameTest(){Assertions.assertEquals("NewTestCourse", postCourse.getCourseName());}
 
         @Test
         @DisplayName("Length of course is retrievable")
@@ -282,7 +280,7 @@ public class CourseTests {
 
         @Test
         @DisplayName("Course name is retrievable")
-        void getCourseNameTest(){Assertions.assertEquals("JavaScript", putCourse.getCourseName());}
+        void getCourseNameTest(){Assertions.assertEquals("UpdateTestCourseName", putCourse.getCourseName());}
 
         @Test
         @DisplayName("Length of course is retrievable")
