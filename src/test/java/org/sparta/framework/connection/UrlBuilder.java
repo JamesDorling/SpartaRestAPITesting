@@ -2,6 +2,8 @@ package org.sparta.framework.connection;
 
 import org.sparta.config.Config;
 
+import static org.sparta.framework.connection.ConnectionManager.getAdminKey;
+
 public class UrlBuilder {
     private final StringBuilder link;
 
@@ -68,6 +70,10 @@ public class UrlBuilder {
         return this;
     }
 
+    public String courseWithAdminKey() {
+        return link.append("/courses/").append(getAdminKey()).toString();
+    }
+  
     public UrlBuilder active(boolean active) {
         link.append("active=").append(active);
         return this;
@@ -107,6 +113,16 @@ public class UrlBuilder {
 
     public String link() { //Trailing & is fine, still works
         return link.toString();
+    }
+
+    public UrlBuilder appendLogin(){
+        link.append("/login");
+        return this;
+    }
+
+    public UrlBuilder userNameAndPassword(String username, String password) {
+        link.append("?username=").append(username).append("&password=").append(password);
+        return this;
     }
 
     public enum TimeParameters {
