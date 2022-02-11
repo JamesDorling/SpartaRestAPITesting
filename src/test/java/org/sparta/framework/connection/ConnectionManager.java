@@ -91,10 +91,7 @@ public class ConnectionManager {
         String username = Config.getUsername();
         String password = Config.getPassword();
         String getAdminURL = ConnectionManager.makeUrl().getAdminKey().userNameAndPassword(username, password).link();
-        System.out.println(getAdminURL);
-        String result = extractKey(getResponse(getAdminURL).body());
-        System.out.println(result);
-        return result;
+        return extractKey(getResponse(getAdminURL).body());
     }
 
     public static String extractKey(String string) {
@@ -102,5 +99,9 @@ public class ConnectionManager {
         str = str.replace("Your API key is:", "");
 
         return str.trim();
+    }
+
+    public static void main(String[] args) {
+        System.out.println(getAdminKey());
     }
 }

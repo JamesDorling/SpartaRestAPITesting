@@ -68,11 +68,6 @@ public class UrlBuilder {
         return this;
     }
 
-    public UrlBuilder userNameAndPassword(String username, String password) {
-        link.append("?username=").append(username).append("&password=").append(password);
-        return this;
-    }
-
     public String courseWithAdminKey() {
         return link.append("/courses/").append(getAdminKey()).toString();
     }
@@ -109,13 +104,18 @@ public class UrlBuilder {
         return link.append("/courses/nonActive").toString();
     }
 
+    public String link() { //Trailing & is fine, still works
+        return link.toString();
+    }
+
     public UrlBuilder getAdminKey(){
         link.append("/login");
         return this;
     }
 
-    public String link() { //Trailing & is fine, still works
-        return link.toString();
+    public UrlBuilder userNameAndPassword(String username, String password) {
+        link.append("?username=").append(username).append("&password=").append(password);
+        return this;
     }
 
     public enum TimeParameters {

@@ -198,7 +198,7 @@ public class CourseTests {
         @Test
         @DisplayName("Failed connection with silly ID")
         void failedConnectionWithSillyId() {
-            Assertions.assertEquals(400, getStatusCode(getSillyCourseIDURL));
+            Assertions.assertEquals(404, getStatusCode(getSillyCourseIDURL));
         }
 
         @Test
@@ -351,7 +351,7 @@ public class CourseTests {
         @Test
         @DisplayName("Failed connection with silly name")
         void failedConnectionWithSillyName() {
-            Assertions.assertEquals(400, getStatusCode(getCourseBySillyName));
+            Assertions.assertEquals(404, getStatusCode(getCourseBySillyName));
         }
 
         @Test
@@ -379,11 +379,11 @@ public class CourseTests {
 
     @Nested
     @DisplayName("POSTing courses")
-    class PosTingCourses {
+    class PostingCourses {
         @Test
         @DisplayName("Do we get an error without using an API key?")
         void doWeGetAnErrorWithoutUsingAnApiKey() {
-            Assertions.assertEquals(400,sendPostRequest(newCourseJson, allCoursesURL).statusCode());
+            Assertions.assertEquals(405,sendPostRequest(newCourseJson, allCoursesURL).statusCode());
         }
     }
 }
