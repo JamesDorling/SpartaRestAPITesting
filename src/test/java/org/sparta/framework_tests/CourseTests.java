@@ -6,6 +6,7 @@ import org.sparta.DTOs.DTOEnum;
 import org.sparta.POJOs.CourseListPojos.CourseList;
 import org.sparta.POJOs.CourseListPojos.HATAEOSExtension.CourseSpartanLinks;
 import org.sparta.crud_forms.AddCourseForm;
+import org.sparta.crud_forms.UpdateCourseForm;
 import org.sparta.framework.connection.ConnectionManager;
 
 import java.util.List;
@@ -32,10 +33,14 @@ public class CourseTests {
     private static final String getAllInactiveCoursesURL = ConnectionManager.makeUrl().getAllInactiveCourses();
     private static List<CourseDTO> allInactiveCoursesList;
 
-    private static final String putCourseURL = ConnectionManager.makeUrl().getCourseWithKey();
-    private static CourseDTO putCourse;
+    private static final String courseWithKeyURL = ConnectionManager.makeUrl().getCourseWithKey();
+    private static CourseDTO postCourse;
     private static String newCourseJson;
+    private static String getPostCourseURL;
+    private static CourseDTO putCourse;
+    private static String putCourseJson;
     private static String getPutCourseURL;
+
 
     private static final String courseName = "Java";
     private static final String getCourseByName = ConnectionManager.makeUrl().course().courseName(courseName).link();
@@ -85,13 +90,18 @@ public class CourseTests {
         }
       
         // Once there's a Course DeleteMapping, maybe change the example courseName and description
-        newCourseJson = new AddCourseForm(allCoursesList.size() + 1, "WeNeedACourseDeleteMapping", 8, "WeNeedACourseDeleteMapping", true).getJson();
-        sendCoursePostRequest(newCourseJson, putCourseURL);
+        newCourseJson = new AddCourseForm("WeNeedACourseDeleteMapping", 8, "WeNeedACourseDeleteMapping").getJson();
+        sendPostRequest(newCourseJson, courseWithKeyURL);
         // Also below section of code should likely have allCoursesList.size() + 1 instead,
         // but that should only be changed once admin layer by devs is complete
-        getPutCourseURL = ConnectionManager.makeUrl().getSpecificCourse(allCoursesList.size());
-        putCourse = (CourseDTO) injectDTO(getPutCourseURL, DTOEnum.COURSE);
+        getPostCourseURL = ConnectionManager.makeUrl().getSpecificCourse(allCoursesList.size());
+        postCourse = (CourseDTO) injectDTO(getPostCourseURL, DTOEnum.COURSE);
 
+        putCourseJson = new UpdateCourseForm("6203d66702673b3a3eccc999", 7, "JavaScript", 8, "Javascript", true).getJson();
+        sendPutRequest(putCourseJson, courseWithKeyURL);
+
+        getPutCourseURL = ConnectionManager.makeUrl().getSpecificCourse(7);
+        putCourse = (CourseDTO) injectDTO(getPutCourseURL, DTOEnum.COURSE);
     }
 
     @Nested
@@ -225,29 +235,54 @@ public class CourseTests {
     }
 
     @Nested
-    @DisplayName("Testing to see if put function works properly")
-    class PutCourseTests{
+    @DisplayName("Testing to see if post function works properly")
+    class PostCourseTests {
 
         @Test
         @DisplayName("Do we get an error without using an API key?")
         void doWeGetAnErrorWithoutUsingAnApiKey() {
-            Assertions.assertEquals(400,sendCoursePutRequest(newCourseJson, allCoursesURL).statusCode());
+            Assertions.assertEquals(400,sendPutRequest(newCourseJson, allCoursesURL).statusCode());
         }
 
         @Test
         @DisplayName("Course Id is retrievable")
             // Also below section of code should likely have allCoursesList.size() + 1 instead,
             // but that should only be changed once admin layer by devs is complete
-        void getCourseIdTest(){Assertions.assertEquals(allCoursesList.size(), putCourse.getCourseId());}
+        void getCourseIdTest(){Assertions.assertEquals(allCoursesList.size(), postCourse.getCourseId());}
 
         @Test
         @DisplayName("Object id is retrievable")
         void getObjectIDTest(){
-            Assertions.assertEquals(24, putCourse.getId().length());}
+            Assertions.assertEquals(24, postCourse.getId().length());}
 
         @Test
         @DisplayName("Course name is retrievable")
-        void getCourseNameTest(){Assertions.assertEquals("WeNeedACourseDeleteMapping", putCourse.getCourseName());}
+        void getCourseNameTest(){Assertions.assertEquals("WeNeedACourseDeleteMapping", postCourse.getCourseName());}
+
+        @Test
+        @DisplayName("Length of course is retrievable")
+        void getLengthOfCourseTest(){Assertions.assertEquals(8, postCourse.getLength());}
+
+        @Test
+        @DisplayName("Activation status is retrievable")
+        void getActivationStatusTest(){Assertions.assertEquals(true, postCourse.isIsActive());}
+    }
+
+    @Nested
+    @DisplayName("Does using put function update course properly?")
+    class PutCourseTests {
+        @Test
+        @DisplayName("Course Id is retrievable")
+        void getCourseIdTest(){Assertions.assertEquals(7, putCourse.getCourseId());}
+
+        @Test
+        @DisplayName("Object id is retrievable")
+        void getObjectIDTest(){
+            Assertions.assertEquals("6203d66702673b3a3eccc999", putCourse.getId());}
+
+        @Test
+        @DisplayName("Course name is retrievable")
+        void getCourseNameTest(){Assertions.assertEquals("JavaScript", putCourse.getCourseName());}
 
         @Test
         @DisplayName("Length of course is retrievable")
@@ -256,6 +291,7 @@ public class CourseTests {
         @Test
         @DisplayName("Activation status is retrievable")
         void getActivationStatusTest(){Assertions.assertEquals(true, putCourse.isIsActive());}
+
     }
 
     @Nested
@@ -344,7 +380,7 @@ public class CourseTests {
         @Test
         @DisplayName("Do we get an error without using an API key?")
         void doWeGetAnErrorWithoutUsingAnApiKey() {
-            Assertions.assertEquals(400,sendCoursePostRequest(newCourseJson, allCoursesURL).statusCode());
+            Assertions.assertEquals(400,sendPostRequest(newCourseJson, allCoursesURL).statusCode());
         }
     }
 }
