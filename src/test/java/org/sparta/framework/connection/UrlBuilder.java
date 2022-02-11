@@ -73,6 +73,11 @@ public class UrlBuilder {
     public String courseWithAdminKey() {
         return link.append("/courses/").append(getAdminKey()).toString();
     }
+  
+    public UrlBuilder active(boolean active) {
+        link.append("active=").append(active);
+        return this;
+    }
 
     public UrlBuilder searchByDate(TimeParameters BeforeOrAfter, TimeParameters StartOrEnd, String date) {
         return this.BeforeAfter(BeforeOrAfter).StartEnd(StartOrEnd).date(date);
