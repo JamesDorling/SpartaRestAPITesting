@@ -11,7 +11,7 @@ public class UpdateCourseForm {
             jsonSmithy.append(",\"courseName\":\"").append(courseName).append("\"");
         }
         if(description != null) {
-            jsonSmithy.append(",\"courseId\":\"").append(description).append("\"");
+            jsonSmithy.append(",\"description\":\"").append(description).append("\"");
         }
         if(length != null) {
             jsonSmithy.append(",\"length\":\"").append(length).append("\"");

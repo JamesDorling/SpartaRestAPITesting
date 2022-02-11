@@ -1,5 +1,6 @@
 package org.sparta.framework.connection;
 
+import org.sparta.config.Config;
 import org.sparta.framework.logging.LogManager;
 
 import java.io.IOException;
@@ -35,7 +36,7 @@ public class ConnectionManager {
         return getResponse(url).statusCode();
     }
 
-    private static HttpResponse<String> getResponse(String url) {
+    public static HttpResponse<String> getResponse(String url) {
         return receiveResponse(url);
     }
 
@@ -84,5 +85,23 @@ public class ConnectionManager {
             LogManager.writeLog(Level.SEVERE, "Error sending HTTP request");
         }
         return httpResponse;
+    }
+
+    // gives just the API key part only
+    public static String getAdminKey(){
+        String username = Config.getUsername();
+        String password = Config.getPassword();
+        String getAdminURL = ConnectionManager.makeUrl().appendLogin().userNameAndPassword(username, password).link();
+        return extractKey(getResponse(getAdminURL).body());
+    }
+
+    public static String extractKey(String string) {
+        String str = string;
+        str = str.replace("Your API key is:", "");
+        return str.trim();
+    }
+
+    public static void main(String[] args) {
+        System.out.println(getAdminKey());
     }
 }
