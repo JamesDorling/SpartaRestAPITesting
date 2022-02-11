@@ -5,8 +5,8 @@
 SpartaRestAPITesting is a testing framework for the Sparta Rest API.
 
 <!--                                                                                     branch  -->
-<!--![Sparta-Global](https://raw.githubusercontent.com/JamesDorling/SpartaRestAPITesting/main/images/Sparta-Global.png) --->
-![Sparta-Global](images/Sparta-Global.png)
+<!--![Sparta-Global](https://raw.githubusercontent.com/JamesDorling/SpartaRestAPITesting/main/src/images/Sparta-Global.png) --->
+![Sparta-Global](src/images/Sparta-Global.png)
 
 ## Contents
 * [Setup](#Using-the-Framework) <br> <br>
